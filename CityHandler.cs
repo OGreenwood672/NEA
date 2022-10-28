@@ -6,23 +6,11 @@ public class CityHandler : MonoBehaviour
 {
 
     //city variables
-    public int width;
-    public int height;
-
-    public int num_of_districts;
-    public float district_competition;
-
-    public float vertical_road_threshhold;
-    public float horizontal_road_threshhold;
-    public int blocksize;
-
+    private int width;
+    private int height;
 
     public GameObject city_parent;
 
-    public int num_of_works;
-    public int num_of_schools;
-    public int num_of_socials;
-    public int num_of_houses;
 
     public Sprite work_sprite;
     public Sprite school_sprite;
@@ -40,12 +28,16 @@ public class CityHandler : MonoBehaviour
     private List<CityCell> house_cells;
     private List<CityCell> road_cells;
 
+    public WorldManager world_manager;
     public PeopleHandler people_handler;
 
 
     // Start is called before the first frame update
     void Start()
     {
+
+        width = world_manager.width;
+        height = world_manager.height;
 
         work_cells = new List<CityCell>();
         school_cells = new List<CityCell>();
@@ -54,17 +46,7 @@ public class CityHandler : MonoBehaviour
         road_cells = new List<CityCell>();
 
         CityGeneration city_gen = new CityGeneration(
-            width,
-            height,
-            seed,
-            num_of_districts,
-            vertical_road_threshhold,
-            horizontal_road_threshhold,
-            blocksize,
-            num_of_works,
-            num_of_schools,
-            num_of_socials,
-            num_of_houses
+            world_manager
         );
 
         city = city_gen.generate_city();
@@ -176,31 +158,31 @@ public class CityHandler : MonoBehaviour
     }
     
 
-    List<CityCell> get_workplaces()
+    public List<CityCell> get_workplaces()
     {
         return work_cells;
     }
 
-    List<CityCell> get_schools()
+    public List<CityCell> get_schools()
     {
         return school_cells;
     }
 
-    List<CityCell> get_socialplaces()
+    public List<CityCell> get_socialplaces()
     {
         return social_cells;
     }
-    List<CityCell> get_houses()
+    public List<CityCell> get_houses()
     {
         return house_cells;
     }
 
-    List<CityCell> get_roads()
+    public List<CityCell> get_roads()
     {
         return road_cells;
     }
 
-    CityCell[,] get_city()
+    public CityCell[,] get_city()
     {
         return city;
     }

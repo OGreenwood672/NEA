@@ -4,27 +4,27 @@ using UnityEngine;
 
 public class CityGeneration
 {
-    public int width;
-    public int height;
+    private int width;
+    private int height;
 
     // General seed
-    public int seed;  //Added seed
+    private int seed;  //Added seed
 
 
     //City Generation Variables
-    public int num_of_districts;
-    public float district_competition;
+    private int num_of_districts;
+    private float district_competition;
 
-    public float vertical_road_threshhold;
-    public float horizontal_road_threshhold;
-    public int blocksize;
+    private float vertical_road_threshhold;
+    private float horizontal_road_threshhold;
+    private int blocksize;
 
 
     //For the ratios of the buildings
-    public int num_of_works;
-    public int num_of_schools;
-    public int num_of_socials;
-    public int num_of_houses;
+    private int num_of_works;
+    private int num_of_schools;
+    private int num_of_socials;
+    private int num_of_houses;
 
 
 
@@ -32,30 +32,25 @@ public class CityGeneration
     private CityCell[,] city;
 
     public CityGeneration(
-        int width,
-        int height,
-        int seed,
-        int num_of_districts,
-        float vertical_road_threshhold,
-        float horizontal_road_threshhold,
-        int blocksize,
-        int num_of_works,
-        int num_of_schools,
-        int num_of_socials,
-        int num_of_houses
+        WorldManager world_manager
     ) {
 
-        this.width = width;
-        this.height = height;
-        this.seed = seed;
-        this.num_of_districts = num_of_districts;
-        this.vertical_road_threshhold = vertical_road_threshhold;
-        this.horizontal_road_threshhold = horizontal_road_threshhold;
-        this.blocksize = blocksize;
-        this.num_of_works = num_of_works;
-        this.num_of_schools = num_of_schools;
-        this.num_of_socials = num_of_socials;
-        this.num_of_houses = num_of_houses;
+        width = world_manager.width;
+        height = world_manager.height;
+
+        seed = world_manager.seed;
+
+        district_competition = world_manager.district_competition;
+        num_of_districts = world_manager.num_of_districts;
+
+        vertical_road_threshhold = world_manager.vertical_road_threshhold;
+        horizontal_road_threshhold = world_manager.horizontal_road_threshhold;
+        blocksize = world_manager.blocksize;
+
+        num_of_works = world_manager.num_of_works;
+        num_of_schools = world_manager.num_of_schools;
+        num_of_socials = world_manager.num_of_socials;
+        num_of_houses = world_manager.num_of_houses;
 
     }
 

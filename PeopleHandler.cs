@@ -6,10 +6,9 @@ public class PeopleHandler : MonoBehaviour
 {
 
     public WorldManager world_manager;
-
-    public int population_size;
-
     public CityHandler city_handler;
+
+    private int seed;
 
     private List<Person> people;
 
@@ -22,12 +21,16 @@ public class PeopleHandler : MonoBehaviour
     void Start()
     {
 
+        seed = world_manager.seed;
+
         work_cells = city_handler.get_workplaces();
         school_cells = city_handler.get_schools();
         social_cells = city_handler.get_socialplaces();
         house_cells = city_handler.get_houses();
 
-        for (int i=0; i<population_size; i++)
+        
+
+        for (int i=0; i<world_manager.population_size; i++)
         {
             
             // CityCell activity = 
