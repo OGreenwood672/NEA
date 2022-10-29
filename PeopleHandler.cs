@@ -25,6 +25,8 @@ public class PeopleHandler : MonoBehaviour
     private List<CityCell> social_cells;
     private List<CityCell> house_cells;
 
+    private List<CityCell> road_cells;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -39,6 +41,7 @@ public class PeopleHandler : MonoBehaviour
         school_cells = city_handler.get_schools();
         social_cells = city_handler.get_socialplaces();
         house_cells = city_handler.get_houses();
+        road_cells = city_handler.get_roads();
 
         int no_of_activities = work_cells.Count + school_cells.Count;
 
@@ -107,5 +110,47 @@ public class PeopleHandler : MonoBehaviour
         }
     }
 
+
+    // Make set of coords useful for navigation using A* algorithm
+    // O(n^2)
+    List<int[]> make_road_map()
+    {
+        List<int[]> map = new List<int[]>();
+
+        foreach (CityCell a_road in road_cells)
+        {
+
+            int neighbours = 0;
+
+            foreach (CityCell b_road in road_cells)
+            {
+
+                if (   (a_road.x == b_road.x-1 && a_road.y == b_road.y)
+                    || (a_road.x == b_road.x+1 && a_road.y == b_road.y)
+                    || (a_road.x == b_road.x && a_road.y == b_road.y+1)
+                    || (a_road.x == b_road.x && a_road.y == b_road.y-1) )
+                {
+                    neighbours++;
+                }
+
+            }
+
+            if (neighbours != 2)
+            {
+
+                map.Add(
+                    new int[]{
+                        a_road.x,
+                        a_road.y
+                    }
+                );
+
+            }
+
+        }
+
+        return map;
+
+    }
 
 }
