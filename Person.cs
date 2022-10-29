@@ -8,11 +8,18 @@ public class Person
     public CityCell activity;
     public CityCell house;
 
+    public GameObject game_object;
+    public SpriteRenderer renderer;
+
+    public int x;
+    public int y;
+
     public bool infected;
 
-    Person(
+    public Person(
         CityCell activity,
-        CityCell house
+        CityCell house,
+        GameObject parent
     )
     {
 
@@ -21,7 +28,13 @@ public class Person
         
         infected = false;
 
+        game_object = new GameObject();
+        game_object.transform.parent = parent.transform;
+
+        renderer = game_object.AddComponent<SpriteRenderer>();
+
     }
+
 
     
 }
