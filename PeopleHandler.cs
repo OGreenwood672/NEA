@@ -113,7 +113,7 @@ public class PeopleHandler : MonoBehaviour
 
     // Make set of coords useful for navigation using A* algorithm
     // O(n^2)
-    List<int[]> make_road_map()
+    List<int[]> make_road_map()  // IT IS USEFUL, ODD INDEXS
     {
         List<int[]> map = new List<int[]>();
 

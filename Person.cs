@@ -35,6 +35,16 @@ public class Person
 
     }
 
+    public a_star(CityCell endpoint, List<int[]> road_map)
+    {
+
+        List<int[]> open_set = new List<int[]>();
+        open_set.Add(new int[]{ x, y });
+
+        Hashtable came_from = new Hashtable();
+
+    }
+
 
     
 }
