@@ -113,23 +113,46 @@ public class PeopleHandler : MonoBehaviour
 
     // Make set of coords useful for navigation using A* algorithm
     // O(n^2)
-    List<int[]> make_road_map()  // IT IS USEFUL, ODD INDEXS
+    List<Hashtable> make_road_map()  // IT IS USEFUL, ODD INDEXS
     {
-        List<int[]> map = new List<int[]>();
+
+        List<Hashtable> map = new List<Hashtable>();
 
         foreach (CityCell a_road in road_cells)
         {
 
+            Hashtable road_location = PeopleUtils.RoadLocation(a_road);
+
             int neighbours = 0;
 
+            // Loop thorugh all road twice vs
+            // Find coords of each neighbour and check if road
             foreach (CityCell b_road in road_cells)
             {
 
-                if (   (a_road.x == b_road.x-1 && a_road.y == b_road.y)
-                    || (a_road.x == b_road.x+1 && a_road.y == b_road.y)
-                    || (a_road.x == b_road.x && a_road.y == b_road.y+1)
-                    || (a_road.x == b_road.x && a_road.y == b_road.y-1) )
+                bool left = a_road.x == b_road.x-1 && a_road.y == b_road.y;
+                bool right = a_road.x == b_road.x+1 && a_road.y == b_road.y;
+                bool up = a_road.x == b_road.x && a_road.y == b_road.y+1;
+                bool down = a_road.x == b_road.x && a_road.y == b_road.y-1;
+
+                if (left)
                 {
+                    road_location["left"] = true;
+                    neighbours++;
+                }
+                else if (right)
+                {
+                    road_location["right"] = true;
+                    neighbours++;
+                }
+                else if (up)
+                {
+                    road_location["up"] = true;
+                    neighbours++;
+                }
+                else if (down)
+                {
+                    road_location["down"] = true;
                     neighbours++;
                 }
 
@@ -139,10 +162,18 @@ public class PeopleHandler : MonoBehaviour
             {
 
                 map.Add(
-                    new int[]{
-                        a_road.x,
-                        a_road.y
-                    }
+                    // new Hashtable{
+                    //     {"x", a_road.x},
+                    //     {"y", a_road.y},
+                    //     {"g", 99999},
+                    //     {"f", 99999},
+                    //     {"parent", null},
+                    //     {"left", false},
+                    //     {"right", false},
+                    //     {"up", false},
+                    //     {"down", false}
+                    // }
+                    road_location
                 );
 
             }
