@@ -80,6 +80,42 @@ public class Person
 
     }
 
+    public List<Hashtable> priotity_replace(List<Hashtable> priority_open_set, Hashtable neighbour)
+    {
+
+        // Remove Current Instance of neighboour inside of open_set
+        for (int i=0; i<priority_open_set.Count; i++)
+        {
+
+            if (   priorty_open_set[i]["x"] == neighbour["x"]
+                && priorty_open_set[i]["y"] == neighbour["y"])
+            {
+
+                priorty_open_set.RemoveAt(i);
+                break;
+
+            }
+
+        }
+
+        //Place neighbour in priority list according to their f score
+        for (int i=0; i<priority_open_set.Count; i++)
+        {
+
+            if (priorty_open_set[i]["f"] > neighbour["f"])
+            {
+
+                priorty_open_set.Insert(i, neighbour);
+                break;
+
+            }
+
+        }
+
+        return priorty_open_set;
+
+    }
+
     private float heuristic(Hashtable start, Hashtable end)
     {
         return (
