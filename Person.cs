@@ -61,7 +61,7 @@ public class Person
             }
 
             priority_open_set.RemoveAt(0);
-            List<Hashtable> neighbours = get_neighbours(current);
+            List<Hashtable> neighbours = get_neighbours(road_map, current);
             foreach (Hashtable neighbour in neighbours)
             {
 
@@ -80,7 +80,14 @@ public class Person
 
     }
 
-    public List<Hashtable> priotity_replace(List<Hashtable> priority_open_set, Hashtable neighbour)
+    private List<Hashtable> get_neighbours(List<Hashtable> road_map, Hashtable current)
+    {
+
+         
+
+    }
+
+    private List<Hashtable> priotity_replace(List<Hashtable> priority_open_set, Hashtable neighbour)
     {
 
         // Remove Current Instance of neighboour inside of open_set
