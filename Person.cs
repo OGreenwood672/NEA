@@ -83,7 +83,46 @@ public class Person
     private List<Hashtable> get_neighbours(List<Hashtable> road_map, Hashtable current)
     {
 
-         
+        List<Hashtable> neighbours = new List<Hashtable>();
+
+        bool[] directions = new bool[]{
+            current["up"],
+            current["down"],
+            current["left"],
+            current["right"]
+        };
+
+        //Copy Instance of list
+        int[,] winning = new int[,]{
+            new int[]{ 0, 1 },
+            new int[]{ 0, -1 },
+            new int[]{ -1, 0 },
+            new int[]{ 1, 0 },
+        };
+
+        foreach (Hashtable cell in road_map)
+        {
+
+            if (current["left"] && current["x"] > cell["x"] && current["y"] == cell["y"])
+            {
+
+
+
+            }
+            if (current["right"] && current["x"] < cell["x"] && current["y"] == cell["y"])
+            {
+                
+            }
+            if (current["up"] && current["x"] == cell["x"] && current["y"] < cell["y"])
+            {
+                
+            }
+            if (current["down"] && current["x"] == cell["x"] && current["y"] > cell["y"])
+            {
+                
+            }
+
+        }
 
     }
 
