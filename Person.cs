@@ -85,20 +85,15 @@ public class Person
 
         List<Hashtable> neighbours = new List<Hashtable>();
 
-        bool[] directions = new bool[]{
-            current["up"],
-            current["down"],
-            current["left"],
-            current["right"]
-        };
+        Hashtable[] winning = new Hashtable[4];
 
-        //Copy Instance of list
-        int[,] winning = new int[,]{
-            new int[]{ 0, 1 },
-            new int[]{ 0, -1 },
-            new int[]{ -1, 0 },
-            new int[]{ 1, 0 },
-        };
+        Hashtable temp = new Hashtable();
+        temp.Add("x", -1);
+
+        for (int i=0; i<4; i++)
+        {
+            winning[i] = temp.Clone();
+        }
 
         foreach (Hashtable cell in road_map)
         {
@@ -106,23 +101,58 @@ public class Person
             if (current["left"] && current["x"] > cell["x"] && current["y"] == cell["y"])
             {
 
-
+                if (winning["x"] == -1 || winning["x"] < cell["x"])
+                {
+                    winning[0] = cell;
+                }
 
             }
             if (current["right"] && current["x"] < cell["x"] && current["y"] == cell["y"])
             {
-                
+
+                if (winning["x"] == -1 || winning["x"] > cell["x"])
+                {
+                    winning[1] = cell;
+                }
+
             }
             if (current["up"] && current["x"] == cell["x"] && current["y"] < cell["y"])
             {
                 
+                if (winning["x"] == -1 || winning["y"] > cell["y"])
+                {
+                    winning[2] = cell;
+                }
+
             }
             if (current["down"] && current["x"] == cell["x"] && current["y"] > cell["y"])
             {
-                
+
+                if (winning["x"] == -1 || winning["y"] < cell["y"])
+                {
+                    winning[3] = cell;
+                }
+
             }
 
         }
+
+        bool[] directions = new bool[]{
+            current["left"],
+            current["right"],
+            current["up"],
+            current["down"]
+        };
+
+        for (int i=0; i<4; i++)
+        {
+            if (directions[i])
+            {
+                neighbours.Add(winning[i]);
+            }
+        }
+
+        return neighbours;
 
     }
 
