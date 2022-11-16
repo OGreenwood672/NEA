@@ -121,7 +121,7 @@ public class PeopleHandler : MonoBehaviour
         foreach (CityCell a_road in road_cells)
         {
 
-            Hashtable road_location = PeopleUtils.RoadLocation(a_road);
+            Hashtable road_location = PeopleUtils.road_location(a_road);
 
             int neighbours = 0;
 
@@ -162,17 +162,6 @@ public class PeopleHandler : MonoBehaviour
             {
 
                 map.Add(
-                    // new Hashtable{
-                    //     {"x", a_road.x},
-                    //     {"y", a_road.y},
-                    //     {"g", 99999},
-                    //     {"f", 99999},
-                    //     {"parent", null},
-                    //     {"left", false},
-                    //     {"right", false},
-                    //     {"up", false},
-                    //     {"down", false}
-                    // }
                     road_location
                 );
 

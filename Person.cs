@@ -16,6 +16,8 @@ public class Person
 
     public bool infected;
 
+    private List<int[]> path;
+
     public Person(
         CityCell activity,
         CityCell house,
@@ -28,10 +30,27 @@ public class Person
         
         infected = false;
 
+        this.path = new List<int[]>();
+
         game_object = new GameObject();
         game_object.transform.parent = parent.transform;
 
         renderer = game_object.AddComponent<SpriteRenderer>();
+
+    }
+
+    public int[] get_current_target_coord()
+    {
+
+        return this.path[0];
+
+    }
+
+    public bool next_coord()
+    {
+
+        this.path.RemoveAt(0);
+        return this.path.Count > 0;
 
     }
 
@@ -57,7 +76,8 @@ public class Person
             Hashtable current = priority_open_set[0];
             if (current["x"] == end["x"] && current["y"] == end["y"])
             {
-                //Finish
+                this.path.Insert(0, new int[]{ current["x"], current["y"] });
+                save_path(current);
             }
 
             priority_open_set.RemoveAt(0);
@@ -189,6 +209,19 @@ public class Person
         }
 
         return priorty_open_set;
+
+    }
+
+    private void save_path(Hashtable cell)
+    {
+
+        if (save_path["parent"] == null)
+        {
+            return;
+        }
+
+        this.path.Insert(0, new int[]{ cell["parent"]["x"], cell["parent"]["y"] });
+        save_path(cell["parent"]);
 
     }
 
