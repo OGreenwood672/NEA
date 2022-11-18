@@ -54,6 +54,13 @@ public class Person
 
     }
 
+    public bool has_path()
+    {
+
+        return this.path.Count > 0;
+        
+    }
+
     public a_star(CityCell start, CityCell endpoint, List<Hashtable> road_map)
     {
 

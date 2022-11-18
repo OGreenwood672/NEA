@@ -8,6 +8,22 @@ public class PeopleHandler : MonoBehaviour
     public WorldManager world_manager;
     public CityHandler city_handler;
 
+    private int speed;
+
+    private int game_ticks;
+
+    private int ticks_in_day;
+
+    private int start_work_time;
+    private int start_work_time_range;
+    private int start_school_time;
+    private int start_school_time_range;
+
+    private int end_work_time;
+    private int end_work_time_range;
+    private int end_school_time;
+    private int end_school_time_range;
+
     private int width;
     private int height;
 
@@ -34,6 +50,21 @@ public class PeopleHandler : MonoBehaviour
         seed = world_manager.seed;
         width = world_manager.width;
         height = world_manager.height;
+
+        speed = world_manager.speed;
+
+        ticks_in_day = world_manager.ticks_in_day;
+
+        start_work_time = world_manager.start_work_time;
+        start_work_time_range = world_manager.start_work_time_range;
+        start_school_time = world_manager.start_school_time;
+        start_school_time_range = world_manager.start_school_time_range;
+
+        end_work_time = world_manager.end_work_time;
+        end_work_time_range = world_manager.end_work_time_range;
+        end_school_time = world_manager.end_school_time;
+        end_school_time_range = world_manager.end_school_time_range;
+
 
         people = new List<Person>();
 
@@ -65,24 +96,49 @@ public class PeopleHandler : MonoBehaviour
             int home_index = rnd.Next(house_cells.Count);
             CityCell home = house_cells[home_index];
 
+            Person person = new Person(
+                                activity,
+                                home,
+                                parent
+                            );
+            person.sprite = uninfected_sprite;
+
             people.Add(
-                new Person(
-                    activity,
-                    home,
-                    parent
-                )
+                person
             );
         }
         
     }
 
-    // Update is called once per frame
-    void Update()
+    // 50 fps
+    void FixedUpdate()
     {
+
+        game_ticks++;
+        if (game_ticks > ticks_in_day)
+        {
+            game_ticks -= ticks_in_day;
+        }
 
         foreach (Person person in people)
         {
 
+            if (person.has_path())
+            {
+                // Redo, not even remotly right moron
+                Hashtable target = person.get_current_target_coord();
+                if (person.x != target["x"])
+                {
+                    person.x += speed;
+                }
+                else if (person.y != target["y"])
+                {
+                    person.y += speed;
+                }
+
+            }
+
+            // Could add offset in here
             person.game_object.transform.position = Camera.main.GetComponent<Camera>().ScreenToWorldPoint(  // Struggled with coords
                                                 new Vector3(
                                                     Screen.width * (person.house.closest_road.x + 0.5f) / width,
@@ -97,23 +153,13 @@ public class PeopleHandler : MonoBehaviour
                                                     1.0f)
                                                 );
 
-
-            if (person.infected) 
-            {
-                person.renderer.sprite = infected_sprite;
-            }
-            else
-            {
-                person.renderer.sprite = uninfected_sprite;
-            }
-
         }
     }
 
 
     // Make set of coords useful for navigation using A* algorithm
     // O(n^2)
-    List<Hashtable> make_road_map()  // IT IS USEFUL, ODD INDEXS
+    List<Hashtable> make_road_map()  // IT IS USEFUL, ODD INDEXS; Lol not true
     {
 
         List<Hashtable> map = new List<Hashtable>();

@@ -25,4 +25,20 @@ public class WorldManager : MonoBehaviour  // Needed as added to World Manager O
     public int num_of_socials;
     public int num_of_houses;
 
+
+    // People Variables
+    public int speed;
+
+    public int ticks_in_day;
+
+    public int start_work_time;
+    public int start_work_time_range;
+    public int start_school_time;
+    public int start_school_time_range;
+
+    public int end_work_time;
+    public int end_work_time_range;
+    public int end_school_time;
+    public int end_school_time_range;
+
 }
