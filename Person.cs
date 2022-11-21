@@ -61,18 +61,18 @@ public class Person
         
     }
 
-    public a_star(CityCell start, CityCell endpoint, List<Hashtable> road_map)
+    public void a_star(CityCell start, CityCell endpoint, List<Hashtable> road_map)
     {
 
-        Hashtable end = PeopleUtils.RoadLocation(endpoint);
+        Hashtable end = PeopleUtils.road_location(endpoint);
 
         road_map.Add(
             end
         );
 
-        List<Hashtable> priority_open_set = new List<HashSet>();
+        List<Hashtable> priority_open_set = new List<Hashtable>();
         priority_open_set.Add(
-            PeopleUtils.RoadLocation(start)  //Talk about PeopleUtils, init used hashtables (no unique for coords)
+            PeopleUtils.road_location(start)  //Talk about PeopleUtils, init used hashtables (no unique for coords)
         );
 
         priority_open_set[0]["f"] = heuristic(priority_open_set[0], end);
@@ -83,7 +83,7 @@ public class Person
             Hashtable current = priority_open_set[0];
             if (current["x"] == end["x"] && current["y"] == end["y"])
             {
-                this.path.Insert(0, new int[]{ current["x"], current["y"] });
+                this.path.Insert(0, new int[]{ (int)current["x"], (int)current["y"] });
                 save_path(current);
             }
 
@@ -92,8 +92,8 @@ public class Person
             foreach (Hashtable neighbour in neighbours)
             {
 
-                int tentative_g = current["g"] + 1;
-                if (tentative_g < neighbour["g"])
+                int tentative_g = (int)current["g"] + 1;
+                if (tentative_g < (int)neighbour["g"])
                 {
                     neighbour["parent"] = current;
                     neighbour["g"] = tentative_g;
@@ -119,43 +119,43 @@ public class Person
 
         for (int i=0; i<4; i++)
         {
-            winning[i] = temp.Clone();
+            winning[i] = (Hashtable)temp.Clone();  //Might need cast as Clone return object
         }
 
         foreach (Hashtable cell in road_map)
         {
 
-            if (current["left"] && current["x"] > cell["x"] && current["y"] == cell["y"])
+            if ((bool)current["left"] && (int)current["x"] > (int)cell["x"] && (int)current["y"] == (int)cell["y"])
             {
 
-                if (winning["x"] == -1 || winning["x"] < cell["x"])
+                if ((int)winning[0]["x"] == -1 || (int)winning[0]["x"] < (int)cell["x"])
                 {
                     winning[0] = cell;
                 }
 
             }
-            if (current["right"] && current["x"] < cell["x"] && current["y"] == cell["y"])
+            if ((bool)current["right"] && (int)current["x"] < (int)cell["x"] && (int)current["y"] == (int)cell["y"])
             {
 
-                if (winning["x"] == -1 || winning["x"] > cell["x"])
+                if ((int)winning[1]["x"] == -1 || (int)winning[1]["x"] > (int)cell["x"])
                 {
                     winning[1] = cell;
                 }
 
             }
-            if (current["up"] && current["x"] == cell["x"] && current["y"] < cell["y"])
+            if ((bool)current["up"] && (int)current["x"] == (int)cell["x"] && (int)current["y"] < (int)cell["y"])
             {
                 
-                if (winning["x"] == -1 || winning["y"] > cell["y"])
+                if ((int)winning[2]["x"] == -1 || (int)winning[2]["y"] > (int)cell["y"])
                 {
                     winning[2] = cell;
                 }
 
             }
-            if (current["down"] && current["x"] == cell["x"] && current["y"] > cell["y"])
+            if ((bool)current["down"] && (int)current["x"] == (int)cell["x"] && (int)current["y"] > (int)cell["y"])
             {
 
-                if (winning["x"] == -1 || winning["y"] < cell["y"])
+                if ((int)winning[3]["x"] == -1 || (int)winning[3]["y"] < (int)cell["y"])
                 {
                     winning[3] = cell;
                 }
@@ -165,10 +165,10 @@ public class Person
         }
 
         bool[] directions = new bool[]{
-            current["left"],
-            current["right"],
-            current["up"],
-            current["down"]
+            (bool)current["left"],
+            (bool)current["right"],
+            (bool)current["up"],
+            (bool)current["down"]
         };
 
         for (int i=0; i<4; i++)
@@ -190,11 +190,11 @@ public class Person
         for (int i=0; i<priority_open_set.Count; i++)
         {
 
-            if (   priorty_open_set[i]["x"] == neighbour["x"]
-                && priorty_open_set[i]["y"] == neighbour["y"])
+            if (   priority_open_set[i]["x"] == neighbour["x"]
+                && priority_open_set[i]["y"] == neighbour["y"])
             {
 
-                priorty_open_set.RemoveAt(i);
+                priority_open_set.RemoveAt(i);
                 break;
 
             }
@@ -205,41 +205,43 @@ public class Person
         for (int i=0; i<priority_open_set.Count; i++)
         {
 
-            if (priorty_open_set[i]["f"] > neighbour["f"])
+            if ((int)priority_open_set[i]["f"] > (int)neighbour["f"])
             {
 
-                priorty_open_set.Insert(i, neighbour);
+                priority_open_set.Insert(i, neighbour);
                 break;
 
             }
 
         }
 
-        return priorty_open_set;
+        return priority_open_set;
 
     }
 
     private void save_path(Hashtable cell)
     {
 
-        if (save_path["parent"] == null)
+        if (cell["parent"] == null)
         {
             return;
         }
 
-        this.path.Insert(0, new int[]{ cell["parent"]["x"], cell["parent"]["y"] });
-        save_path(cell["parent"]);
+        this.path.Insert(0, new int[]{ (int)((Hashtable)cell["parent"])["x"], (int)((Hashtable)cell["parent"])["y"] });
+        save_path((Hashtable)cell["parent"]);
 
     }
 
     private float heuristic(Hashtable start, Hashtable end)
     {
         return (
-              (start["x"] - end["x"]) * (start["x"] - end["x"])
-            + (start["y"] - end["y"]) * (start["y"] - end["y"])
+              ((int)start["x"] - (int)end["x"]) * ((int)start["x"] - (int)end["x"])
+            + ((int)start["y"] - (int)end["y"]) * ((int)start["y"] - (int)end["y"])
         );
     }
 
 
     
 }
+
+//CASTING ERRORS, DUE TO HASHTABLES ONLY HOLDING GENERIC OBJECT CLASS

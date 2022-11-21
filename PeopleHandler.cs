@@ -101,7 +101,8 @@ public class PeopleHandler : MonoBehaviour
                                 home,
                                 parent
                             );
-            person.sprite = uninfected_sprite;
+
+            person.renderer.sprite = uninfected_sprite;
 
             people.Add(
                 person
@@ -126,22 +127,22 @@ public class PeopleHandler : MonoBehaviour
             if (person.has_path())
             {
 
-                Hashtable target = person.get_current_target_coord();
-                if (person.x < target["x"])
+                int[] target = person.get_current_target_coord();
+                if (person.x < target[0])
                 {
-                    person.x = Mathf.Min(person.x + speed, target["x"]);
+                    person.x = Mathf.Min(person.x + speed, target[0]);
                 }
-                else if (person.x > target["x"])
+                else if (person.x > target[0])
                 {
-                    person.x = Mathf.Max(person.x - speed, target["x"]);
+                    person.x = Mathf.Max(person.x - speed, target[0]);
                 }
-                else if (person.y < target["y"])
+                else if (person.y < target[1])
                 {
-                    person.y = Mathf.Min(person.y + speed, target["y"]);
+                    person.y = Mathf.Min(person.y + speed, target[1]);
                 }
-                else if (person.y > target["y"])
+                else if (person.y > target[1])
                 {
-                    person.y = Mathf.Max(person.y - speed, target["y"]);
+                    person.y = Mathf.Max(person.y - speed, target[1]);
                 }
                 else
                 {

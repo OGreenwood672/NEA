@@ -9,8 +9,8 @@ public class PeopleUtils
     {
 
         return new Hashtable{
-            {"x", a_road.x},
-            {"y", a_road.y},
+            {"x", road.x},
+            {"y", road.y},
             {"g", 99999},
             {"f", 99999},
             {"parent", null},
