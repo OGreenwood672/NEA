@@ -125,15 +125,27 @@ public class PeopleHandler : MonoBehaviour
 
             if (person.has_path())
             {
-                // Redo, not even remotly right moron
+
                 Hashtable target = person.get_current_target_coord();
-                if (person.x != target["x"])
+                if (person.x < target["x"])
                 {
-                    person.x += speed;
+                    person.x = Mathf.Min(person.x + speed, target["x"]);
                 }
-                else if (person.y != target["y"])
+                else if (person.x > target["x"])
                 {
-                    person.y += speed;
+                    person.x = Mathf.Max(person.x - speed, target["x"]);
+                }
+                else if (person.y < target["y"])
+                {
+                    person.y = Mathf.Min(person.y + speed, target["y"]);
+                }
+                else if (person.y > target["y"])
+                {
+                    person.y = Mathf.Max(person.y - speed, target["y"]);
+                }
+                else
+                {
+                    person.next_coord();
                 }
 
             }
