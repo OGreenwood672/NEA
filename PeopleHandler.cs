@@ -8,6 +8,8 @@ public class PeopleHandler : MonoBehaviour
     public WorldManager world_manager;
     public CityHandler city_handler;
 
+    private System.Random rnd;
+
     private int speed;
 
     private int game_ticks;
@@ -43,6 +45,8 @@ public class PeopleHandler : MonoBehaviour
 
     private List<CityCell> road_cells;
 
+    private List<Hashtable> road_map;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -74,9 +78,11 @@ public class PeopleHandler : MonoBehaviour
         house_cells = city_handler.get_houses();
         road_cells = city_handler.get_roads();
 
+        road_map = make_road_map();
+
         int no_of_activities = work_cells.Count + school_cells.Count;
 
-        System.Random rnd = new System.Random(seed);
+        rnd = new System.Random(seed);
 
         for (int i=0; i<world_manager.population_size; i++)
         {
@@ -123,6 +129,20 @@ public class PeopleHandler : MonoBehaviour
 
         foreach (Person person in people)
         {
+
+            if (game_ticks == start_work_time)
+            {
+                person.activity_time = rnd.Next(start_school_time_range);
+            }
+            if (game_ticks == start_work_time + person.activity_time)
+            {
+                person.a_star(
+                    person.house.closest_road,
+                    person.activity.closest_road,
+                    road_map
+                );
+            }
+
 
             if (person.has_path())
             {

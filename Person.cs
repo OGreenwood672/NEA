@@ -14,6 +14,8 @@ public class Person
     public int x;
     public int y;
 
+    public int activity_time;
+
     public bool infected;
 
     private List<int[]> path;
@@ -27,6 +29,8 @@ public class Person
 
         this.activity = activity;
         this.house = house;
+
+        this.activity_time = 0;
         
         infected = false;
 
@@ -81,7 +85,7 @@ public class Person
         {
 
             Hashtable current = priority_open_set[0];
-            if (current["x"] == end["x"] && current["y"] == end["y"])
+            if ((int)current["x"] == (int)end["x"] && (int)current["y"] == (int)end["y"])
             {
                 this.path.Insert(0, new int[]{ (int)current["x"], (int)current["y"] });
                 save_path(current);
@@ -89,6 +93,7 @@ public class Person
 
             priority_open_set.RemoveAt(0);
             List<Hashtable> neighbours = get_neighbours(road_map, current);
+            Debug.Log(neighbours.Count);
             foreach (Hashtable neighbour in neighbours)
             {
 
@@ -125,39 +130,47 @@ public class Person
         foreach (Hashtable cell in road_map)
         {
 
+            // Debug.Log((bool)current["left"]);
             if ((bool)current["left"] && (int)current["x"] > (int)cell["x"] && (int)current["y"] == (int)cell["y"])
             {
 
                 if ((int)winning[0]["x"] == -1 || (int)winning[0]["x"] < (int)cell["x"])
                 {
                     winning[0] = cell;
+                    Debug.Log("Neighbour");
                 }
 
             }
+            // Debug.Log((bool)current["right"]);
             if ((bool)current["right"] && (int)current["x"] < (int)cell["x"] && (int)current["y"] == (int)cell["y"])
             {
 
                 if ((int)winning[1]["x"] == -1 || (int)winning[1]["x"] > (int)cell["x"])
                 {
                     winning[1] = cell;
+                    Debug.Log("Neighbour");
                 }
 
             }
+            // Debug.Log((bool)current["up"]);
             if ((bool)current["up"] && (int)current["x"] == (int)cell["x"] && (int)current["y"] < (int)cell["y"])
             {
                 
                 if ((int)winning[2]["x"] == -1 || (int)winning[2]["y"] > (int)cell["y"])
                 {
                     winning[2] = cell;
+                    Debug.Log("Neighbour");
                 }
 
             }
+            // Debug.Log((bool)current["down"]);
             if ((bool)current["down"] && (int)current["x"] == (int)cell["x"] && (int)current["y"] > (int)cell["y"])
             {
 
                 if ((int)winning[3]["x"] == -1 || (int)winning[3]["y"] < (int)cell["y"])
                 {
                     winning[3] = cell;
+                    Debug.Log("Neighbour");
                 }
 
             }
