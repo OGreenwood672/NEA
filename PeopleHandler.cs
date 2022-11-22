@@ -130,11 +130,17 @@ public class PeopleHandler : MonoBehaviour
         foreach (Person person in people)
         {
 
-            if (game_ticks == start_work_time)
+            // Home -> work
+            if (game_ticks == start_work_time && person.activity.district == "work")
+            {
+                person.activity_time = rnd.Next(start_work_time_range);
+            }
+            if (game_ticks == start_school_time && person.activity.district == "school")
             {
                 person.activity_time = rnd.Next(start_school_time_range);
             }
-            if (game_ticks == start_work_time + person.activity_time)
+            if (game_ticks == start_work_time + person.activity_time && person.activity.district == "work"
+             || game_ticks == start_school_time + person.activity_time && person.activity.district == "school")
             {
 
                 Hashtable activity = PeopleUtils.add_neighbour_directions(
@@ -153,6 +159,40 @@ public class PeopleHandler : MonoBehaviour
                     road_map
                 );
             }
+
+            if (i % 2 != 0)
+
+            // Work -> Home
+            if (game_ticks == end_work_time && person.activity.district == "work")
+            {
+                person.activity_time = rnd.Next(end_work_time_range);
+            }
+            if (game_ticks == end_school_time && person.activity.district == "school")
+            {
+                person.activity_time = rnd.Next(end_school_time_range);
+            }
+            if (game_ticks == end_work_time + person.activity_time && person.activity.district == "work"
+             || game_ticks == end_school_time + person.activity_time && person.activity.district == "school")
+            {
+
+                Hashtable activity = PeopleUtils.add_neighbour_directions(
+                    road_cells,
+                    PeopleUtils.road_location(
+                        person.house.closest_road
+                    )
+                );
+                Hashtable house = PeopleUtils.road_location(
+                    person.house.closest_road
+                );
+
+                person.a_star(
+                    activity,
+                    house,
+                    road_map
+                );
+            }
+
+
 
 
             if (person.has_path())
