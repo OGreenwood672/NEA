@@ -160,8 +160,6 @@ public class PeopleHandler : MonoBehaviour
                 );
             }
 
-            if (i % 2 != 0)
-
             // Work -> Home
             if (game_ticks == end_work_time && person.activity.district == "work")
             {
