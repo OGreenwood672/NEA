@@ -136,9 +136,20 @@ public class PeopleHandler : MonoBehaviour
             }
             if (game_ticks == start_work_time + person.activity_time)
             {
+
+                Hashtable activity = PeopleUtils.add_neighbour_directions(
+                    road_cells,
+                    PeopleUtils.road_location(
+                        person.house.closest_road
+                    )
+                );
+                Hashtable house = PeopleUtils.road_location(
+                    person.house.closest_road
+                );
+
                 person.a_star(
-                    person.house.closest_road,
-                    person.activity.closest_road,
+                    activity,
+                    house,
                     road_map
                 );
             }
@@ -180,11 +191,11 @@ public class PeopleHandler : MonoBehaviour
                                                 );
 
             person.game_object.transform.localScale = Camera.main.GetComponent<Camera>().ScreenToWorldPoint(    // * 0.25f works
-                                                new Vector3(
-                                                    ((float)Screen.width / (float)width) * 0.25f + Screen.width/2,
-                                                    ((float)Screen.height / (float)height) * 0.27f + Screen.height/2,
-                                                    1.0f)
-                                                );
+                                              new Vector3(
+                                                  ((float)Screen.width / (float)width) * 0.25f + Screen.width/2,
+                                                  ((float)Screen.height / (float)height) * 0.27f + Screen.height/2,
+                                                  1.0f)
+                                              );
 
         }
     }
@@ -205,37 +216,17 @@ public class PeopleHandler : MonoBehaviour
             int neighbours = 0;
 
             // Loop thorugh all road twice vs
-            // Find coords of each neighbour and check if road
-            foreach (CityCell b_road in road_cells)
-            {
+            road_location = PeopleUtils.add_neighbour_directions(
+                road_cells,
+                road_location
+            );
 
-                bool left = a_road.x == b_road.x-1 && a_road.y == b_road.y;
-                bool right = a_road.x == b_road.x+1 && a_road.y == b_road.y;
-                bool up = a_road.x == b_road.x && a_road.y == b_road.y+1;
-                bool down = a_road.x == b_road.x && a_road.y == b_road.y-1;
-
-                if (left)
-                {
-                    road_location["left"] = true;
-                    neighbours++;
-                }
-                else if (right)
-                {
-                    road_location["right"] = true;
-                    neighbours++;
-                }
-                else if (up)
-                {
-                    road_location["up"] = true;
-                    neighbours++;
-                }
-                else if (down)
-                {
-                    road_location["down"] = true;
-                    neighbours++;
-                }
-
-            }
+            int neighbours = new bool[]{
+                road_location["left"],
+                road_location["right"],
+                road_location["up"],
+                road_location["down"]
+            }.Count(value => value == true);
 
             if (neighbours != 2)
             {

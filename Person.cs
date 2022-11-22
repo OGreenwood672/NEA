@@ -65,10 +65,10 @@ public class Person
         
     }
 
-    public void a_star(CityCell start, CityCell endpoint, List<Hashtable> road_map)
+    public void a_star(Hashtable start, Hashtable endpoint, List<Hashtable> road_map)
     {
 
-        Hashtable end = PeopleUtils.road_location(endpoint);
+        //Hashtable end = PeopleUtils.road_location(endpoint);
 
         road_map.Add(
             end
