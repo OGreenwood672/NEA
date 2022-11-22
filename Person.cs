@@ -65,7 +65,7 @@ public class Person
         
     }
 
-    public void a_star(Hashtable start, Hashtable endpoint, List<Hashtable> road_map)
+    public void a_star(Hashtable start, Hashtable end, List<Hashtable> road_map)
     {
 
         //Hashtable end = PeopleUtils.road_location(endpoint);
@@ -76,7 +76,7 @@ public class Person
 
         List<Hashtable> priority_open_set = new List<Hashtable>();
         priority_open_set.Add(
-            PeopleUtils.road_location(start)  //Talk about PeopleUtils, init used hashtables (no unique for coords)
+            start  //Talk about PeopleUtils, init used hashtables (no unique for coords)
         );
 
         priority_open_set[0]["f"] = heuristic(priority_open_set[0], end);

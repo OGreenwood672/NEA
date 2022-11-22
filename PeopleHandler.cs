@@ -251,20 +251,24 @@ public class PeopleHandler : MonoBehaviour
 
             Hashtable road_location = PeopleUtils.road_location(a_road);
 
-            int neighbours = 0;
-
             // Loop thorugh all road twice vs
             road_location = PeopleUtils.add_neighbour_directions(
                 road_cells,
                 road_location
             );
 
-            int neighbours = new bool[]{
-                road_location["left"],
-                road_location["right"],
-                road_location["up"],
-                road_location["down"]
-            }.Count(value => value == true);
+            bool[] neighbour_directions = new bool[4] {
+                (bool)road_location["left"],
+                (bool)road_location["right"],
+                (bool)road_location["up"],
+                (bool)road_location["down"]
+            };
+            
+            int neighbours = 0;
+            for (int i=0; i<4; i++)
+            {
+                if (neighbour_directions[i]) { neighbours++; }
+            }
 
             if (neighbours != 2)
             {

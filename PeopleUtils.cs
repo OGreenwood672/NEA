@@ -26,13 +26,13 @@ public class PeopleUtils
     public static Hashtable add_neighbour_directions(List<CityCell> road_cells, Hashtable road_location)
     {
         
-        foreach (CityCell b_road in road_cells)
+        foreach (CityCell road in road_cells)
         {
 
-            bool left = a_road.x == b_road.x-1 && a_road.y == b_road.y;
-            bool right = a_road.x == b_road.x+1 && a_road.y == b_road.y;
-            bool up = a_road.x == b_road.x && a_road.y == b_road.y+1;
-            bool down = a_road.x == b_road.x && a_road.y == b_road.y-1;
+            bool left = (int)road_location["x"] == road.x-1 && (int)road_location["y"] == road.y;
+            bool right = (int)road_location["x"] == road.x+1 && (int)road_location["y"] == road.y;
+            bool up = (int)road_location["x"] == road.x && (int)road_location["y"] == road.y+1;
+            bool down = (int)road_location["x"] == road.x && (int)road_location["y"] == road.y-1;
 
             if (left)
             {
