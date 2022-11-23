@@ -70,16 +70,21 @@ public class Person
 
         //Hashtable end = PeopleUtils.road_location(endpoint);
 
+        Debug.Log("start: x: " + start["x"] + ", y: " + start["y"]);
+        Debug.Log("end x: " + end["x"] + ", y: " + end["y"]);
+
         road_map.Add(
             end
         );
 
         List<Hashtable> priority_open_set = new List<Hashtable>();
+
+        start["g"] = 0;
+        start["f"] = heuristic(start, end);
+
         priority_open_set.Add(
             start  //Talk about PeopleUtils, init used hashtables (no unique for coords)
         );
-
-        priority_open_set[0]["f"] = heuristic(priority_open_set[0], end);
 
         while (priority_open_set.Count > 0)
         {
@@ -89,14 +94,14 @@ public class Person
             {
                 this.path.Insert(0, new int[]{ (int)current["x"], (int)current["y"] });
                 save_path(current);
+                return;
             }
 
             priority_open_set.RemoveAt(0);
             List<Hashtable> neighbours = get_neighbours(road_map, current);
-            Debug.Log(neighbours.Count);
+            // Debug.Log(neighbours.Count);
             foreach (Hashtable neighbour in neighbours)
             {
-
                 int tentative_g = (int)current["g"] + 1;
                 if (tentative_g < (int)neighbour["g"])
                 {
@@ -104,11 +109,13 @@ public class Person
                     neighbour["g"] = tentative_g;
                     neighbour["f"] = tentative_g + heuristic(neighbour, end);
                     priority_open_set = priotity_replace(priority_open_set, neighbour);
+                    // Debug.Log(priority_open_set.Count);
                 }
 
             }
 
         }
+        Debug.Log("Not found");
 
     }
 
@@ -130,47 +137,39 @@ public class Person
         foreach (Hashtable cell in road_map)
         {
 
-            // Debug.Log((bool)current["left"]);
             if ((bool)current["left"] && (int)current["x"] > (int)cell["x"] && (int)current["y"] == (int)cell["y"])
             {
 
                 if ((int)winning[0]["x"] == -1 || (int)winning[0]["x"] < (int)cell["x"])
                 {
                     winning[0] = cell;
-                    Debug.Log("Neighbour");
                 }
 
             }
-            // Debug.Log((bool)current["right"]);
             if ((bool)current["right"] && (int)current["x"] < (int)cell["x"] && (int)current["y"] == (int)cell["y"])
             {
 
                 if ((int)winning[1]["x"] == -1 || (int)winning[1]["x"] > (int)cell["x"])
                 {
                     winning[1] = cell;
-                    Debug.Log("Neighbour");
                 }
 
             }
-            // Debug.Log((bool)current["up"]);
-            if ((bool)current["up"] && (int)current["x"] == (int)cell["x"] && (int)current["y"] < (int)cell["y"])
+            if ((bool)current["up"] && (int)current["x"] == (int)cell["x"] && (int)current["y"] > (int)cell["y"])
             {
                 
-                if ((int)winning[2]["x"] == -1 || (int)winning[2]["y"] > (int)cell["y"])
+                if ((int)winning[2]["x"] == -1 || (int)winning[2]["y"] < (int)cell["y"])
                 {
                     winning[2] = cell;
-                    Debug.Log("Neighbour");
                 }
 
             }
-            // Debug.Log((bool)current["down"]);
-            if ((bool)current["down"] && (int)current["x"] == (int)cell["x"] && (int)current["y"] > (int)cell["y"])
+            if ((bool)current["down"] && (int)current["x"] == (int)cell["x"] && (int)current["y"] < (int)cell["y"])
             {
 
-                if ((int)winning[3]["x"] == -1 || (int)winning[3]["y"] < (int)cell["y"])
+                if ((int)winning[3]["x"] == -1 || (int)winning[3]["y"] > (int)cell["y"])
                 {
                     winning[3] = cell;
-                    Debug.Log("Neighbour");
                 }
 
             }
@@ -184,11 +183,14 @@ public class Person
             (bool)current["down"]
         };
 
+        Debug.Log("current: x: " + current["x"] + ", y: " + current["y"]);
+
         for (int i=0; i<4; i++)
         {
             if (directions[i])
             {
                 neighbours.Add(winning[i]);
+                Debug.Log(i + ": x: " + winning[i]["x"] + ", y: " + winning[i]["y"]);
             }
         }
 
@@ -214,11 +216,19 @@ public class Person
 
         }
 
+        if (priority_open_set.Count == 0)
+        {
+            priority_open_set.Add(
+                neighbour
+            );
+            return priority_open_set;
+        }
+
         //Place neighbour in priority list according to their f score
         for (int i=0; i<priority_open_set.Count; i++)
         {
 
-            if ((int)priority_open_set[i]["f"] > (int)neighbour["f"])
+            if ((float)priority_open_set[i]["f"] > (float)neighbour["f"])
             {
 
                 priority_open_set.Insert(i, neighbour);

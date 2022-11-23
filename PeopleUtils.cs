@@ -29,8 +29,8 @@ public class PeopleUtils
         foreach (CityCell road in road_cells)
         {
 
-            bool left = (int)road_location["x"] == road.x-1 && (int)road_location["y"] == road.y;
-            bool right = (int)road_location["x"] == road.x+1 && (int)road_location["y"] == road.y;
+            bool left = (int)road_location["x"] == road.x+1 && (int)road_location["y"] == road.y;
+            bool right = (int)road_location["x"] == road.x-1 && (int)road_location["y"] == road.y;
             bool up = (int)road_location["x"] == road.x && (int)road_location["y"] == road.y+1;
             bool down = (int)road_location["x"] == road.x && (int)road_location["y"] == road.y-1;
 
@@ -52,6 +52,16 @@ public class PeopleUtils
             }
 
         }
+
+        // if ((int)road_location["x"] == 6 && (int)road_location["y"] == 0) 
+        // {
+        //     Debug.Log("Left: " + road_location["left"]);
+        //     Debug.Log("right: " + road_location["right"]);
+        //     Debug.Log("up: " + road_location["up"]);
+        //     Debug.Log("down: " + road_location["down"]);
+
+        // }
+
         return road_location;
     }
 

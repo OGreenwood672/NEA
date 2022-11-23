@@ -139,56 +139,58 @@ public class PeopleHandler : MonoBehaviour
             {
                 person.activity_time = rnd.Next(start_school_time_range);
             }
-            if (game_ticks == start_work_time + person.activity_time && person.activity.district == "work"
-             || game_ticks == start_school_time + person.activity_time && person.activity.district == "school")
+            if ((game_ticks == start_work_time + person.activity_time && person.activity.district == "work")
+             || (game_ticks == start_school_time + person.activity_time && person.activity.district == "school"))
             {
 
-                Hashtable activity = PeopleUtils.add_neighbour_directions(
+                Hashtable house = PeopleUtils.add_neighbour_directions(
                     road_cells,
                     PeopleUtils.road_location(
                         person.house.closest_road
                     )
                 );
-                Hashtable house = PeopleUtils.road_location(
-                    person.house.closest_road
+                Hashtable activity = PeopleUtils.road_location(
+                    person.activity.closest_road
                 );
 
                 person.a_star(
-                    activity,
                     house,
+                    activity,
                     road_map
                 );
             }
+
+            //Probably fucked the activity and home switch around
 
             // Work -> Home
-            if (game_ticks == end_work_time && person.activity.district == "work")
-            {
-                person.activity_time = rnd.Next(end_work_time_range);
-            }
-            if (game_ticks == end_school_time && person.activity.district == "school")
-            {
-                person.activity_time = rnd.Next(end_school_time_range);
-            }
-            if (game_ticks == end_work_time + person.activity_time && person.activity.district == "work"
-             || game_ticks == end_school_time + person.activity_time && person.activity.district == "school")
-            {
+            // if (game_ticks == end_work_time && person.activity.district == "work")
+            // {
+            //     person.activity_time = rnd.Next(end_work_time_range);
+            // }
+            // if (game_ticks == end_school_time && person.activity.district == "school")
+            // {
+            //     person.activity_time = rnd.Next(end_school_time_range);
+            // }
+            // if (game_ticks == end_work_time + person.activity_time && person.activity.district == "work"
+            //  || game_ticks == end_school_time + person.activity_time && person.activity.district == "school")
+            // {
 
-                Hashtable activity = PeopleUtils.add_neighbour_directions(
-                    road_cells,
-                    PeopleUtils.road_location(
-                        person.house.closest_road
-                    )
-                );
-                Hashtable house = PeopleUtils.road_location(
-                    person.house.closest_road
-                );
+            //     Hashtable activity = PeopleUtils.add_neighbour_directions(
+            //         road_cells,
+            //         PeopleUtils.road_location(
+            //             person.house.closest_road
+            //         )
+            //     );
+            //     Hashtable house = PeopleUtils.road_location(
+            //         person.house.closest_road
+            //     );
 
-                person.a_star(
-                    activity,
-                    house,
-                    road_map
-                );
-            }
+            //     person.a_star(
+            //         activity,
+            //         house,
+            //         road_map
+            //     );
+            // }
 
 
 
@@ -246,10 +248,10 @@ public class PeopleHandler : MonoBehaviour
 
         List<Hashtable> map = new List<Hashtable>();
 
-        foreach (CityCell a_road in road_cells)
+        foreach (CityCell road in road_cells)
         {
 
-            Hashtable road_location = PeopleUtils.road_location(a_road);
+            Hashtable road_location = PeopleUtils.road_location(road);
 
             // Loop thorugh all road twice vs
             road_location = PeopleUtils.add_neighbour_directions(
