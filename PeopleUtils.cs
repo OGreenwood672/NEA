@@ -53,15 +53,6 @@ public class PeopleUtils
 
         }
 
-        // if ((int)road_location["x"] == 6 && (int)road_location["y"] == 0) 
-        // {
-        //     Debug.Log("Left: " + road_location["left"]);
-        //     Debug.Log("right: " + road_location["right"]);
-        //     Debug.Log("up: " + road_location["up"]);
-        //     Debug.Log("down: " + road_location["down"]);
-
-        // }
-
         return road_location;
     }
 

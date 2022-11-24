@@ -27,7 +27,7 @@ public class WorldManager : MonoBehaviour  // Needed as added to World Manager O
 
 
     // People Variables
-    public int speed;
+    public float speed;
 
     public int ticks_in_day;
 

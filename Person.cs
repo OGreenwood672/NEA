@@ -11,8 +11,8 @@ public class Person
     public GameObject game_object;
     public SpriteRenderer renderer;
 
-    public int x;
-    public int y;
+    public float x;
+    public float y;
 
     public int activity_time;
 
@@ -35,6 +35,9 @@ public class Person
         infected = false;
 
         this.path = new List<int[]>();
+
+        x = house.x;
+        y = house.y;
 
         game_object = new GameObject();
         game_object.transform.parent = parent.transform;
@@ -70,8 +73,8 @@ public class Person
 
         //Hashtable end = PeopleUtils.road_location(endpoint);
 
-        Debug.Log("start: x: " + start["x"] + ", y: " + start["y"]);
-        Debug.Log("end x: " + end["x"] + ", y: " + end["y"]);
+        // Debug.Log("start: x: " + start["x"] + ", y: " + start["y"]);
+        // Debug.Log("end x: " + end["x"] + ", y: " + end["y"]);
 
         road_map.Add(
             end
@@ -86,6 +89,7 @@ public class Person
             start  //Talk about PeopleUtils, init used hashtables (no unique for coords)
         );
 
+
         while (priority_open_set.Count > 0)
         {
 
@@ -99,7 +103,6 @@ public class Person
 
             priority_open_set.RemoveAt(0);
             List<Hashtable> neighbours = get_neighbours(road_map, current);
-            // Debug.Log(neighbours.Count);
             foreach (Hashtable neighbour in neighbours)
             {
                 int tentative_g = (int)current["g"] + 1;
@@ -109,7 +112,6 @@ public class Person
                     neighbour["g"] = tentative_g;
                     neighbour["f"] = tentative_g + heuristic(neighbour, end);
                     priority_open_set = priotity_replace(priority_open_set, neighbour);
-                    // Debug.Log(priority_open_set.Count);
                 }
 
             }
@@ -183,14 +185,14 @@ public class Person
             (bool)current["down"]
         };
 
-        Debug.Log("current: x: " + current["x"] + ", y: " + current["y"]);
+        // Debug.Log("current: x: " + current["x"] + ", y: " + current["y"]);
 
         for (int i=0; i<4; i++)
         {
             if (directions[i])
             {
                 neighbours.Add(winning[i]);
-                Debug.Log(i + ": x: " + winning[i]["x"] + ", y: " + winning[i]["y"]);
+                // Debug.Log(i + ": x: " + winning[i]["x"] + ", y: " + winning[i]["y"]);
             }
         }
 

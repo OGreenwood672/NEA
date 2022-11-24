@@ -10,7 +10,7 @@ public class PeopleHandler : MonoBehaviour
 
     private System.Random rnd;
 
-    private int speed;
+    private float speed;
 
     private int game_ticks;
 
@@ -96,7 +96,7 @@ public class PeopleHandler : MonoBehaviour
             }
             else
             {
-                activity = work_cells[activity_index - work_cells.Count];
+                activity = school_cells[activity_index - work_cells.Count];
             }
 
             int home_index = rnd.Next(house_cells.Count);
@@ -156,11 +156,15 @@ public class PeopleHandler : MonoBehaviour
                 person.a_star(
                     house,
                     activity,
-                    road_map
+                    copy_road_map(road_map)
                 );
+
+                person.x = person.house.closest_road.x;
+                person.y = person.house.closest_road.y;
+
             }
 
-            //Probably fucked the activity and home switch around
+            //Probably messed up the activity and home switch around
 
             // Work -> Home
             // if (game_ticks == end_work_time && person.activity.district == "work")
@@ -188,7 +192,7 @@ public class PeopleHandler : MonoBehaviour
             //     person.a_star(
             //         activity,
             //         house,
-            //         road_map
+            //         copy_road_map(road_map)
             //     );
             // }
 
@@ -197,7 +201,6 @@ public class PeopleHandler : MonoBehaviour
 
             if (person.has_path())
             {
-
                 int[] target = person.get_current_target_coord();
                 if (person.x < target[0])
                 {
@@ -222,12 +225,13 @@ public class PeopleHandler : MonoBehaviour
 
             }
 
+
             // Could add offset in here
             person.game_object.transform.position = Camera.main.GetComponent<Camera>().ScreenToWorldPoint(  // Struggled with coords
                                                 new Vector3(
-                                                    Screen.width * (person.house.closest_road.x + 0.5f) / width,
-                                                    Screen.height - Screen.height * (person.house.closest_road.y + 0.5f) / height,
-                                                    1.0f)
+                                                    (float)Screen.width * (person.x + 0.5f) / width,
+                                                    (float)Screen.height - (float)Screen.height * (person.y + 0.5f) / height,
+                                                    0.95f)
                                                 );
 
             person.game_object.transform.localScale = Camera.main.GetComponent<Camera>().ScreenToWorldPoint(    // * 0.25f works
@@ -236,7 +240,7 @@ public class PeopleHandler : MonoBehaviour
                                                   ((float)Screen.height / (float)height) * 0.27f + Screen.height/2,
                                                   1.0f)
                                               );
-
+            
         }
     }
 
@@ -285,6 +289,19 @@ public class PeopleHandler : MonoBehaviour
 
         return map;
 
+    }
+
+    List<Hashtable> copy_road_map(List<Hashtable> road_map)
+    {
+
+        List<Hashtable> new_road_map = new List<Hashtable>();
+        foreach (Hashtable road in road_map)
+        {
+            new_road_map.Add(
+                (Hashtable)road.Clone()
+            );
+        }
+        return new_road_map;
     }
 
 }
