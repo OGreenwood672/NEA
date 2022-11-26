@@ -26,7 +26,9 @@ public class Person
     public Person(
         CityCell activity,
         CityCell house,
-        GameObject parent
+        GameObject parent,
+        float x_off,
+        float y_off
     )
     {
 
@@ -42,10 +44,14 @@ public class Person
         x = house.x;
         y = house.y;
 
+        this.x_off = x_off;
+        this.y_off = y_off;
+
         game_object = new GameObject();
         game_object.transform.parent = parent.transform;
 
         renderer = game_object.AddComponent<SpriteRenderer>();
+
 
     }
 
@@ -69,6 +75,13 @@ public class Person
 
         return this.path.Count > 0;
         
+    }
+
+    public void append_to_path(CityCell cell)
+    {
+        this.path.Add(
+            new int[] { cell.x, cell.y }
+        );
     }
 
     public void a_star(Hashtable start, Hashtable end, List<Hashtable> road_map)
@@ -127,7 +140,7 @@ public class Person
 
             priority_open_set.RemoveAt(0);
             List<Hashtable> neighbours = get_neighbours(road_map, current);
-            foreach (Hashtable neighbour in neighbours)
+            foreach (Hashtable neighbour in neighbours)  // Seeds like 167 cause errors
             {
                 int tentative_g = (int)current["g"] + 1;
                 if (tentative_g < (int)neighbour["g"])

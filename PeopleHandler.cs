@@ -118,10 +118,14 @@ public class PeopleHandler : MonoBehaviour
             int home_index = rnd.Next(house_cells.Count);
             CityCell home = house_cells[home_index];
 
+            float offset_range = 0.4f;
+
             Person person = new Person(
                                 activity,
                                 home,
-                                parent
+                                parent,
+                                (float)rnd.Next((int)(offset_range * 100)) / 100f - (offset_range/2.0f),
+                                (float)rnd.Next((int)(offset_range * 100)) / 100f - (offset_range/2.0f)
                             );
 
             person.renderer.sprite = uninfected_sprite;
@@ -156,8 +160,8 @@ public class PeopleHandler : MonoBehaviour
             // Could add offset in here
             person.game_object.transform.position = Camera.main.GetComponent<Camera>().ScreenToWorldPoint(  // Struggled with coords
                                                 new Vector3(
-                                                    (float)Screen.width * (person.x + 0.5f) / width,
-                                                    (float)Screen.height - (float)Screen.height * (person.y + 0.5f) / height,
+                                                    (float)Screen.width * (person.x + 0.5f + person.x_off) / width,
+                                                    (float)Screen.height - (float)Screen.height * (person.y + 0.5f + person.y_off) / height,
                                                     0.95f)
                                                 );
 
@@ -227,8 +231,8 @@ public class PeopleHandler : MonoBehaviour
         {
             find_path(
                 person,
-                person.house.closest_road,
-                person.activity.closest_road
+                person.house,
+                person.activity
             );
         }
 
@@ -236,8 +240,8 @@ public class PeopleHandler : MonoBehaviour
         {
             find_path(
                 person,
-                person.activity.closest_road,
-                person.house.closest_road
+                person.activity,
+                person.house
             );
         }
     }
@@ -247,11 +251,11 @@ public class PeopleHandler : MonoBehaviour
         Hashtable start_hashtable = PeopleUtils.add_neighbour_directions(
             road_cells,
             PeopleUtils.road_location(
-                start
+                start.closest_road
             )
         );
         Hashtable end_hashtable = PeopleUtils.road_location(
-            end
+            end.closest_road
         );
 
         person.a_star(
@@ -260,8 +264,8 @@ public class PeopleHandler : MonoBehaviour
             copy_road_map(road_map)
         );
 
-        person.x = start.x;
-        person.y = start.y;
+        person.append_to_path(end);
+
     }
 
     void move_people(Person person)
