@@ -129,6 +129,7 @@ public class PeopleHandler : MonoBehaviour
                             );
 
             person.renderer.sprite = uninfected_sprite;
+            person.renderer.enabled = false;
 
             people.Add(
                 person
@@ -157,20 +158,27 @@ public class PeopleHandler : MonoBehaviour
             move_people(person);
 
 
-            // Could add offset in here
-            person.game_object.transform.position = Camera.main.GetComponent<Camera>().ScreenToWorldPoint(  // Struggled with coords
-                                                new Vector3(
-                                                    (float)Screen.width * (person.x + 0.5f + person.x_off) / width,
-                                                    (float)Screen.height - (float)Screen.height * (person.y + 0.5f + person.y_off) / height,
-                                                    0.95f)
-                                                );
+            if (person.has_path())
+            {
+                person.renderer.enabled = true;
+                person.game_object.transform.position = Camera.main.GetComponent<Camera>().ScreenToWorldPoint(  // Struggled with coords
+                                                    new Vector3(
+                                                        (float)Screen.width * (person.x + 0.5f + person.x_off) / width,
+                                                        (float)Screen.height - (float)Screen.height * (person.y + 0.5f + person.y_off) / height,
+                                                        0.95f)
+                                                    );
 
-            person.game_object.transform.localScale = Camera.main.GetComponent<Camera>().ScreenToWorldPoint(
-                                              new Vector3(
-                                                  ((float)Screen.width / (float)width) * 0.1f + Screen.width/2,
-                                                  ((float)Screen.height / (float)height) * 0.1f + Screen.height/2,
-                                                  1.0f)
-                                              );
+                person.game_object.transform.localScale = Camera.main.GetComponent<Camera>().ScreenToWorldPoint(
+                                                new Vector3(
+                                                    ((float)Screen.width / (float)width) * 0.1f + Screen.width/2,
+                                                    ((float)Screen.height / (float)height) * 0.1f + Screen.height/2,
+                                                    1.0f)
+                                                );
+            }
+            else
+            {
+                person.renderer.enabled = false;
+            }
             
         }
     }
@@ -234,6 +242,8 @@ public class PeopleHandler : MonoBehaviour
                 person.house,
                 person.activity
             );
+            person.x = person.house.x;
+            person.y = person.house.y;
         }
 
         if (end_work_time_check || end_school_time_check || end_social_time_check)
@@ -243,6 +253,8 @@ public class PeopleHandler : MonoBehaviour
                 person.activity,
                 person.house
             );
+            person.x = person.activity.x;
+            person.y = person.activity.y;
         }
     }
 
@@ -258,13 +270,16 @@ public class PeopleHandler : MonoBehaviour
             end.closest_road
         );
 
-        person.a_star(
+        bool found = person.a_star(
             start_hashtable,
             end_hashtable,
             copy_road_map(road_map)
         );
 
-        person.append_to_path(end);
+        if (found)
+        {
+            person.append_to_path(end);
+        }
 
     }
 
@@ -331,7 +346,9 @@ public class PeopleHandler : MonoBehaviour
                 if (neighbour_directions[i]) { neighbours++; }
             }
 
-            if (neighbours != 2)
+            bool opposite_roads = (neighbour_directions[0] && neighbour_directions[1])
+                               || (neighbour_directions[2] && neighbour_directions[3]);
+            if (!(neighbours == 2 && opposite_roads))
             {
 
                 map.Add(

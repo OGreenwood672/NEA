@@ -84,15 +84,13 @@ public class Person
         );
     }
 
-    public void a_star(Hashtable start, Hashtable end, List<Hashtable> road_map)
+    public bool a_star(Hashtable start, Hashtable end, List<Hashtable> road_map)
     {
 
         //Hashtable end = PeopleUtils.road_location(endpoint);
 
         // Debug.Log("start: x: " + start["x"] + ", y: " + start["y"]);
         // Debug.Log("end x: " + end["x"] + ", y: " + end["y"]);
-
-
 
         bool end_in_road_map = false;
         foreach (Hashtable road in road_map)
@@ -135,7 +133,7 @@ public class Person
             {
                 this.path.Insert(0, new int[]{ (int)current["x"], (int)current["y"] });
                 save_path(current);
-                return;
+                return true;;
             }
 
             priority_open_set.RemoveAt(0);
@@ -155,8 +153,9 @@ public class Person
 
         }
         // Debug.Log("Not found");
-
         // Error: roughly = 0.625%
+
+        return false;
 
     }
 
@@ -231,10 +230,10 @@ public class Person
             if (directions[i])
             {
                 neighbours.Add(winning[i]);
-                // if ((int)current["x"] == 13 && (int)current["y"] == 1)
-                // {
-                //     Debug.Log(i + ": x: " + winning[i]["x"] + ", y: " + winning[i]["y"]);
-                // }
+                if ((int)winning[i]["x"] == -1)
+                {
+                    Debug.Log(i + ": x: " + current["x"] + ", y: " + current["y"]);
+                }
             }
         }
 
