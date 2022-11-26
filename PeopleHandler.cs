@@ -167,34 +167,37 @@ public class PeopleHandler : MonoBehaviour
             //Probably messed up the activity and home switch around
 
             // Work -> Home
-            // if (game_ticks == end_work_time && person.activity.district == "work")
-            // {
-            //     person.activity_time = rnd.Next(end_work_time_range);
-            // }
-            // if (game_ticks == end_school_time && person.activity.district == "school")
-            // {
-            //     person.activity_time = rnd.Next(end_school_time_range);
-            // }
-            // if (game_ticks == end_work_time + person.activity_time && person.activity.district == "work"
-            //  || game_ticks == end_school_time + person.activity_time && person.activity.district == "school")
-            // {
+            if (game_ticks == end_work_time && person.activity.district == "work")
+            {
+                person.activity_time = rnd.Next(end_work_time_range);
+            }
+            if (game_ticks == end_school_time && person.activity.district == "school")
+            {
+                person.activity_time = rnd.Next(end_school_time_range);
+            }
+            if (game_ticks == end_work_time + person.activity_time && person.activity.district == "work"
+             || game_ticks == end_school_time + person.activity_time && person.activity.district == "school")
+            {
 
-            //     Hashtable activity = PeopleUtils.add_neighbour_directions(
-            //         road_cells,
-            //         PeopleUtils.road_location(
-            //             person.house.closest_road
-            //         )
-            //     );
-            //     Hashtable house = PeopleUtils.road_location(
-            //         person.house.closest_road
-            //     );
+                Hashtable activity = PeopleUtils.add_neighbour_directions(
+                    road_cells,
+                    PeopleUtils.road_location(
+                        person.activity.closest_road
+                    )
+                );
+                Hashtable house = PeopleUtils.road_location(
+                    person.house.closest_road
+                );
 
-            //     person.a_star(
-            //         activity,
-            //         house,
-            //         copy_road_map(road_map)
-            //     );
-            // }
+                person.a_star(
+                    activity,
+                    house,
+                    copy_road_map(road_map)
+                );
+
+                person.x = person.activity.closest_road.x;
+                person.y = person.activity.closest_road.y;
+            }
 
 
 
@@ -234,7 +237,7 @@ public class PeopleHandler : MonoBehaviour
                                                     0.95f)
                                                 );
 
-            person.game_object.transform.localScale = Camera.main.GetComponent<Camera>().ScreenToWorldPoint(    // * 0.25f works
+            person.game_object.transform.localScale = Camera.main.GetComponent<Camera>().ScreenToWorldPoint(
                                               new Vector3(
                                                   ((float)Screen.width / (float)width) * 0.25f + Screen.width/2,
                                                   ((float)Screen.height / (float)height) * 0.27f + Screen.height/2,

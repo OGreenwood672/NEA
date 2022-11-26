@@ -14,6 +14,8 @@ public class CityCell
 
     public CityCell closest_road;
 
+    private List<Person> people_inside;
+
     public CityCell(int x_index, int y_index)
     {
 
