@@ -146,40 +146,7 @@ public class PeopleHandler : MonoBehaviour
         foreach (Person person in people)
         {
 
-            // Home -> work
-            if (game_ticks == start_work_time && person.activity.district == "work")
-            {
-                person.activity_time = rnd.Next(start_work_time_range);
-            }
-
-
-            if (game_ticks == start_school_time && person.activity.district == "school")
-            {
-                person.activity_time = rnd.Next(start_school_time_range);
-            }
-
-            // To social places
-            if (game_ticks == start_social_time & person.activity.district == "social")
-            {
-                person.activity_time = rnd.Next(start_social_time_range);
-            }
-
-            // Work -> Home
-            if (game_ticks == end_work_time && person.activity.district == "work")
-            {
-                person.activity_time = rnd.Next(end_work_time_range);
-            }
-
-            if (game_ticks == end_school_time && person.activity.district == "school")
-            {
-                person.activity_time = rnd.Next(end_school_time_range);
-            }
-
-            // To social places
-            if (game_ticks == end_social_time & person.activity.district == "social")
-            {
-                person.activity_time = rnd.Next(end_social_time_range);
-            }
+            add_activity_time(person);
 
             add_path(person);
 
@@ -201,6 +168,46 @@ public class PeopleHandler : MonoBehaviour
                                                   1.0f)
                                               );
             
+        }
+    }
+
+    void add_activity_time(Person person)
+    {
+
+        if (person.activity.district == "work")
+        {
+            if (game_ticks == start_work_time)
+            {
+                person.activity_time = rnd.Next(start_work_time_range);
+            }
+            else if (game_ticks == end_work_time)
+            {
+                person.activity_time = rnd.Next(end_work_time_range);
+            }
+        }
+
+        if (person.activity.district == "school")
+        {
+            if (game_ticks == start_school_time)
+            {
+                person.activity_time = rnd.Next(start_school_time_range);
+            }
+            else if (game_ticks == end_school_time)
+            {
+                person.activity_time = rnd.Next(end_school_time_range);
+            }
+        }
+
+        if (person.activity.district == "social")
+        {
+            if (game_ticks == start_social_time)
+            {
+                person.activity_time = rnd.Next(start_social_time_range);
+            }
+            else if (game_ticks == end_social_time)
+            {
+                person.activity_time = rnd.Next(end_social_time_range);
+            }
         }
     }
 
