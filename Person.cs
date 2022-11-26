@@ -14,6 +14,9 @@ public class Person
     public float x;
     public float y;
 
+    public float x_off;
+    public float y_off;
+
     public int activity_time;
 
     public bool infected;

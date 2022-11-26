@@ -20,11 +20,16 @@ public class PeopleHandler : MonoBehaviour
     private int start_work_time_range;
     private int start_school_time;
     private int start_school_time_range;
+    private int start_social_time;
+    private int start_social_time_range;
+
 
     private int end_work_time;
     private int end_work_time_range;
     private int end_school_time;
     private int end_school_time_range;
+    private int end_social_time;
+    private int end_social_time_range;
 
     private int width;
     private int height;
@@ -36,7 +41,7 @@ public class PeopleHandler : MonoBehaviour
     public Sprite infected_sprite;
     public Sprite uninfected_sprite;
 
-    private List<Person> people;
+    private List<Person> people = new List<Person>();
 
     private List<CityCell> work_cells;
     private List<CityCell> school_cells;
@@ -63,14 +68,15 @@ public class PeopleHandler : MonoBehaviour
         start_work_time_range = world_manager.start_work_time_range;
         start_school_time = world_manager.start_school_time;
         start_school_time_range = world_manager.start_school_time_range;
+        start_social_time = world_manager.start_social_time;
+        start_social_time_range = world_manager.start_social_time_range;
 
         end_work_time = world_manager.end_work_time;
         end_work_time_range = world_manager.end_work_time_range;
         end_school_time = world_manager.end_school_time;
         end_school_time_range = world_manager.end_school_time_range;
-
-
-        people = new List<Person>();
+        end_social_time = world_manager.end_social_time;
+        end_social_time_range = world_manager.end_social_time_range;
 
         work_cells = city_handler.get_workplaces();
         school_cells = city_handler.get_schools();
@@ -80,7 +86,9 @@ public class PeopleHandler : MonoBehaviour
 
         road_map = make_road_map();
 
-        int no_of_activities = work_cells.Count + school_cells.Count;
+        int no_of_activities = work_cells.Count
+                             + school_cells.Count
+                             + social_cells.Count;
 
         rnd = new System.Random(seed);
 
@@ -94,9 +102,17 @@ public class PeopleHandler : MonoBehaviour
             {
                 activity = work_cells[activity_index];
             }
-            else
+            else if (activity_index < work_cells.Count + school_cells.Count)
             {
                 activity = school_cells[activity_index - work_cells.Count];
+            }
+            else
+            {
+                activity = social_cells[
+                    activity_index
+                  - work_cells.Count
+                  - school_cells.Count
+                ];
             }
 
             int home_index = rnd.Next(house_cells.Count);
@@ -135,98 +151,79 @@ public class PeopleHandler : MonoBehaviour
             {
                 person.activity_time = rnd.Next(start_work_time_range);
             }
+
+
             if (game_ticks == start_school_time && person.activity.district == "school")
             {
                 person.activity_time = rnd.Next(start_school_time_range);
             }
-            if ((game_ticks == start_work_time + person.activity_time && person.activity.district == "work")
-             || (game_ticks == start_school_time + person.activity_time && person.activity.district == "school"))
+
+            // To social places
+            if (game_ticks == start_social_time & person.activity.district == "social")
             {
-
-                Hashtable house = PeopleUtils.add_neighbour_directions(
-                    road_cells,
-                    PeopleUtils.road_location(
-                        person.house.closest_road
-                    )
-                );
-                Hashtable activity = PeopleUtils.road_location(
-                    person.activity.closest_road
-                );
-
-                person.a_star(
-                    house,
-                    activity,
-                    copy_road_map(road_map)
-                );
-
-                person.x = person.house.closest_road.x;
-                person.y = person.house.closest_road.y;
-
+                person.activity_time = rnd.Next(start_social_time_range);
             }
-
-            //Probably messed up the activity and home switch around
 
             // Work -> Home
             if (game_ticks == end_work_time && person.activity.district == "work")
             {
                 person.activity_time = rnd.Next(end_work_time_range);
             }
+
             if (game_ticks == end_school_time && person.activity.district == "school")
             {
                 person.activity_time = rnd.Next(end_school_time_range);
             }
-            if (game_ticks == end_work_time + person.activity_time && person.activity.district == "work"
-             || game_ticks == end_school_time + person.activity_time && person.activity.district == "school")
-            {
 
-                Hashtable activity = PeopleUtils.add_neighbour_directions(
-                    road_cells,
-                    PeopleUtils.road_location(
-                        person.activity.closest_road
-                    )
+            // To social places
+            if (game_ticks == end_social_time & person.activity.district == "social")
+            {
+                person.activity_time = rnd.Next(end_social_time_range);
+            }
+
+
+            if ((game_ticks == person.activity_time + start_work_time && person.activity.district == "work")
+             || (game_ticks == person.activity_time + start_school_time && person.activity.district == "school"))
+            {
+                find_path(
+                    person,
+                    person.house.closest_road,
+                    person.activity.closest_road
                 );
-                Hashtable house = PeopleUtils.road_location(
+            }
+
+            if (game_ticks == person.activity_time + end_work_time && person.activity.district == "work"
+             || game_ticks == person.activity_time + end_school_time && person.activity.district == "school")
+            {
+                find_path(
+                    person,
+                    person.activity.closest_road,
                     person.house.closest_road
                 );
 
-                person.a_star(
-                    activity,
-                    house,
-                    copy_road_map(road_map)
-                );
-
-                person.x = person.activity.closest_road.x;
-                person.y = person.activity.closest_road.y;
             }
 
-
-
-
-            if (person.has_path())
+            if (game_ticks == person.activity_time + start_social_time && person.activity.district == "social")
             {
-                int[] target = person.get_current_target_coord();
-                if (person.x < target[0])
-                {
-                    person.x = Mathf.Min(person.x + speed, target[0]);
-                }
-                else if (person.x > target[0])
-                {
-                    person.x = Mathf.Max(person.x - speed, target[0]);
-                }
-                else if (person.y < target[1])
-                {
-                    person.y = Mathf.Min(person.y + speed, target[1]);
-                }
-                else if (person.y > target[1])
-                {
-                    person.y = Mathf.Max(person.y - speed, target[1]);
-                }
-                else
-                {
-                    person.next_coord();
-                }
-
+                find_path(
+                    person,
+                    person.house.closest_road,
+                    person.activity.closest_road
+                );
             }
+
+
+            if (game_ticks == person.activity_time + end_social_time && person.activity.district == "social")
+            {
+                find_path(
+                    person,
+                    person.activity.closest_road,
+                    person.house.closest_road
+                );
+            }
+
+
+            move_people(person);
 
 
             // Could add offset in here
@@ -239,12 +236,65 @@ public class PeopleHandler : MonoBehaviour
 
             person.game_object.transform.localScale = Camera.main.GetComponent<Camera>().ScreenToWorldPoint(
                                               new Vector3(
-                                                  ((float)Screen.width / (float)width) * 0.25f + Screen.width/2,
-                                                  ((float)Screen.height / (float)height) * 0.27f + Screen.height/2,
+                                                  ((float)Screen.width / (float)width) * 0.1f + Screen.width/2,
+                                                  ((float)Screen.height / (float)height) * 0.1f + Screen.height/2,
                                                   1.0f)
                                               );
             
         }
+    }
+
+    void find_path(Person person, CityCell start, CityCell end)
+    {
+        Hashtable start_hashtable = PeopleUtils.add_neighbour_directions(
+            road_cells,
+            PeopleUtils.road_location(
+                start
+            )
+        );
+        Hashtable end_hashtable = PeopleUtils.road_location(
+            end
+        );
+
+        person.a_star(
+            start_hashtable,
+            end_hashtable,
+            copy_road_map(road_map)
+        );
+
+        person.x = start.x;
+        person.y = start.y;
+    }
+
+    void move_people(Person person)
+    {
+
+        if (person.has_path())
+        {
+            int[] target = person.get_current_target_coord();
+            if (person.x < target[0])
+            {
+                person.x = Mathf.Min(person.x + speed, target[0]);
+            }
+            else if (person.x > target[0])
+            {
+                person.x = Mathf.Max(person.x - speed, target[0]);
+            }
+            else if (person.y < target[1])
+            {
+                person.y = Mathf.Min(person.y + speed, target[1]);
+            }
+            else if (person.y > target[1])
+            {
+                person.y = Mathf.Max(person.y - speed, target[1]);
+            }
+            else
+            {
+                person.next_coord();
+            }
+
+        }
+
     }
 
 
