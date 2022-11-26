@@ -76,11 +76,31 @@ public class Person
         // Debug.Log("start: x: " + start["x"] + ", y: " + start["y"]);
         // Debug.Log("end x: " + end["x"] + ", y: " + end["y"]);
 
-        road_map.Add(
-            end
-        );
+
+
+        bool end_in_road_map = false;
+        foreach (Hashtable road in road_map)
+        {
+            if ((int)road["x"] == (int)start["x"] && (int)road["y"] == (int)start["y"])
+            {
+                start = road;
+                break;
+            }
+            if ((int)road["x"] == (int)end["x"] && (int)road["y"] == (int)end["y"])
+            {
+                end_in_road_map = true;
+            }
+        }
+
+        if (!end_in_road_map)
+        {
+            road_map.Add(
+                end
+            );
+        }
 
         List<Hashtable> priority_open_set = new List<Hashtable>();
+
 
         start["g"] = 0;
         start["f"] = heuristic(start, end);
@@ -89,11 +109,12 @@ public class Person
             start  //Talk about PeopleUtils, init used hashtables (no unique for coords)
         );
 
+        Hashtable current = priority_open_set[0];
 
         while (priority_open_set.Count > 0)
         {
 
-            Hashtable current = priority_open_set[0];
+            current = priority_open_set[0];
             if ((int)current["x"] == (int)end["x"] && (int)current["y"] == (int)end["y"])
             {
                 this.path.Insert(0, new int[]{ (int)current["x"], (int)current["y"] });
@@ -117,7 +138,9 @@ public class Person
             }
 
         }
-        Debug.Log("Not found");
+        // Debug.Log("Not found");
+
+        // Error: roughly = 0.625%
 
     }
 
@@ -192,7 +215,10 @@ public class Person
             if (directions[i])
             {
                 neighbours.Add(winning[i]);
-                // Debug.Log(i + ": x: " + winning[i]["x"] + ", y: " + winning[i]["y"]);
+                // if ((int)current["x"] == 13 && (int)current["y"] == 1)
+                // {
+                //     Debug.Log(i + ": x: " + winning[i]["x"] + ", y: " + winning[i]["y"]);
+                // }
             }
         }
 

@@ -221,7 +221,6 @@ public class PeopleHandler : MonoBehaviour
                 else
                 {
                     person.next_coord();
-                    print("fern waz here")
                 }
 
             }
