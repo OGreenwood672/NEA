@@ -181,47 +181,7 @@ public class PeopleHandler : MonoBehaviour
                 person.activity_time = rnd.Next(end_social_time_range);
             }
 
-
-            if ((game_ticks == person.activity_time + start_work_time && person.activity.district == "work")
-             || (game_ticks == person.activity_time + start_school_time && person.activity.district == "school"))
-            {
-                find_path(
-                    person,
-                    person.house.closest_road,
-                    person.activity.closest_road
-                );
-            }
-
-            if (game_ticks == person.activity_time + end_work_time && person.activity.district == "work"
-             || game_ticks == person.activity_time + end_school_time && person.activity.district == "school")
-            {
-                find_path(
-                    person,
-                    person.activity.closest_road,
-                    person.house.closest_road
-                );
-
-            }
-
-            if (game_ticks == person.activity_time + start_social_time && person.activity.district == "social")
-            {
-                find_path(
-                    person,
-                    person.house.closest_road,
-                    person.activity.closest_road
-                );
-            }
-
-
-            if (game_ticks == person.activity_time + end_social_time && person.activity.district == "social")
-            {
-                find_path(
-                    person,
-                    person.activity.closest_road,
-                    person.house.closest_road
-                );
-            }
-
+            add_path(person);
 
             move_people(person);
 
@@ -241,6 +201,37 @@ public class PeopleHandler : MonoBehaviour
                                                   1.0f)
                                               );
             
+        }
+    }
+
+    void add_path(Person person) 
+    {
+
+        bool work_time_check = game_ticks == person.activity_time + start_work_time && person.activity.district == "work";
+        bool school_time_check = game_ticks == person.activity_time + start_school_time && person.activity.district == "school";
+        bool social_time_check = game_ticks == person.activity_time + start_social_time && person.activity.district == "social";
+
+        bool end_work_time_check = game_ticks == person.activity_time + end_work_time && person.activity.district == "work";
+        bool end_school_time_check = game_ticks == person.activity_time + end_school_time && person.activity.district == "school";
+        bool end_social_time_check = game_ticks == person.activity_time + end_social_time && person.activity.district == "social";
+
+
+        if (work_time_check || school_time_check || social_time_check)
+        {
+            find_path(
+                person,
+                person.house.closest_road,
+                person.activity.closest_road
+            );
+        }
+
+        if (end_work_time_check || end_school_time_check || end_social_time_check)
+        {
+            find_path(
+                person,
+                person.activity.closest_road,
+                person.house.closest_road
+            );
         }
     }
 
