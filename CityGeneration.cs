@@ -2,22 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// Class to encapsulate all functions needed to generate the city
 public class CityGeneration
 {
+
+    // The number of cells in width & hight
     private int width;
     private int height;
 
     // General seed
-    private int seed;  //Added seed
+    private int seed;
 
 
     //City Generation Variables
+    // {
+    // Number of random districts generated to 
     private int num_of_districts;
     private float district_competition;
 
     private float vertical_road_threshhold;
     private float horizontal_road_threshhold;
     private int blocksize;
+    // }
 
 
     //For the ratios of the buildings
@@ -240,6 +247,7 @@ public class CityGeneration
                 for (int y=0; y < height; y++)
                 {
                     city[y, x].road = true;
+                    city[y, x].set_district(null);
                 }
             }
         }
@@ -266,6 +274,7 @@ public class CityGeneration
                         {
 
                             city[y, x].road = true;
+                            city[y, x].set_district(null);
                             x++;
 
                             if (x > width - 1) { break; }
