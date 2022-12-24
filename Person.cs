@@ -22,6 +22,7 @@ public class Person
     public bool infected;
 
     private List<int[]> path;
+    private List<int[]> temp_path;
 
     public Person(
         CityCell activity,
@@ -40,6 +41,7 @@ public class Person
         infected = false;
 
         this.path = new List<int[]>();
+        this.temp_path = new List<int[]>();
 
         x = house.x;
         y = house.y;
@@ -131,7 +133,8 @@ public class Person
             current = priority_open_set[0];
             if ((int)current["x"] == (int)end["x"] && (int)current["y"] == (int)end["y"])
             {
-                this.path.Insert(0, new int[]{ (int)current["x"], (int)current["y"] });
+                this.temp_path = new List<int[]>();
+                this.temp_path.Insert(0, new int[]{ (int)current["x"], (int)current["y"] });
                 save_path(current);
                 return true;;
             }
@@ -290,10 +293,14 @@ public class Person
 
         if (cell["parent"] == null)
         {
+            foreach (int[] p in this.temp_path)
+            {
+                this.path.Add(p);
+            }
             return;
         }
 
-        this.path.Insert(0, new int[]{ (int)((Hashtable)cell["parent"])["x"], (int)((Hashtable)cell["parent"])["y"] });
+        this.temp_path.Insert(0, new int[]{ (int)((Hashtable)cell["parent"])["x"], (int)((Hashtable)cell["parent"])["y"] });
         save_path((Hashtable)cell["parent"]);
 
     }
