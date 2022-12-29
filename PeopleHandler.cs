@@ -157,6 +157,11 @@ public class PeopleHandler : MonoBehaviour
 
             move_people(person);
 
+            if (person.infected && game_ticks % Mathf.FloorToInt(20 * (1-world_manager.virus_infectivity)) == 0)
+            {
+                VirusHandler.infect_people(people);
+            }
+
 
             if (person.has_path())
             {

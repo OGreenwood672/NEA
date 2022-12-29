@@ -45,4 +45,8 @@ public class WorldManager : MonoBehaviour  // Needed as added to World Manager O
     public int end_social_time;
     public int end_social_time_range;
 
+    // Virus Variables
+    public int virus_infectivity;
+    public int virus_range; 
+
 }
