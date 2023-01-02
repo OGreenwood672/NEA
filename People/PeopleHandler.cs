@@ -395,4 +395,25 @@ public class PeopleHandler : MonoBehaviour
         return new_road_map;
     }
 
+    public int get_game_ticks()
+    {
+        return game_ticks;
+    }
+
+    public int get_infected_count()
+    {
+        int count = 0;
+        foreach (Person person in people)
+        {
+            if (person.infected)
+                count++;
+        }
+        return count;
+    }
+
+    public int get_population_count()
+    {
+        return world_manager.population_size;
+    }
+
 }
