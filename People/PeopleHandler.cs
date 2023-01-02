@@ -131,7 +131,7 @@ public class PeopleHandler : MonoBehaviour
             person.renderer.sprite = uninfected_sprite;
             person.renderer.enabled = false;
 
-            if (rnd.Next(101) < Mathf.FloorToInt(20 * (1-world_manager.initial_infected_probabilty)))
+            if (rnd.Next(101) / 100f < world_manager.initial_infected_probabilty)
             {
                 person.infected = true;
                 person.renderer.sprite = infected_sprite;
