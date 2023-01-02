@@ -131,6 +131,12 @@ public class PeopleHandler : MonoBehaviour
             person.renderer.sprite = uninfected_sprite;
             person.renderer.enabled = false;
 
+            if (rnd.Next(101) < Mathf.FloorToInt(20 * (1-world_manager.initial_infected_probabilty)))
+            {
+                person.infected = true;
+                person.renderer.sprite = infected_sprite;
+            }
+
             people.Add(
                 person
             );
@@ -157,9 +163,17 @@ public class PeopleHandler : MonoBehaviour
 
             move_people(person);
 
-            if (person.infected && game_ticks % Mathf.FloorToInt(20 * (1-world_manager.virus_infectivity)) == 0)
+            if (person.infected && game_ticks % world_manager.rate_of_infection_in_ticks == 0)
             {
-                VirusHandler.infect_people(people);
+                VirusHandler.infect_people(world_manager, people, person);
+            }
+            if (person.infected)
+            {
+                person.renderer.sprite = infected_sprite;
+            }
+            else
+            {
+                person.renderer.sprite = uninfected_sprite;
             }
 
 

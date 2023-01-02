@@ -4,13 +4,25 @@ using UnityEngine;
 
 public class SimulationHandler : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+
+    public GameObject home_screen;
+
+    public GameObject info_box;
+
+    public CityHandler city_handler;
+
+    public void on_start_simulation()
     {
-        
+        home_screen.SetActive(false);
+        info_box.SetActive(true);
+        city_handler.enabled = true;
     }
 
-    // Update is called once per frame
+    void Start()
+    {
+
+    }
+
     void Update()
     {
         
