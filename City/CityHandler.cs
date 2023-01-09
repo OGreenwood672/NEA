@@ -115,6 +115,13 @@ public class CityHandler : MonoBehaviour
         }
     }
 
+    public CityCell get_cell_by_coords(int x, int y)
+    {
+
+        return city[y, x];
+
+    }
+
     void classify_cells_by_district(CityCell[,] city)
     {
         

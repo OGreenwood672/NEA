@@ -21,6 +21,8 @@ public class Person
 
     public bool infected;
 
+    public bool in_lockdown;
+
     private List<int[]> path;
     private List<int[]> temp_path;
 
@@ -76,6 +78,13 @@ public class Person
     {
 
         return this.path.Count > 0;
+        
+    }
+
+    public void clear_path()
+    {
+
+        this.path = new List<int[]>();
         
     }
 

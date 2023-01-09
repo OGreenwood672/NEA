@@ -52,6 +52,7 @@ public class PeopleHandler : MonoBehaviour
 
     private List<Hashtable> road_map;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -157,9 +158,34 @@ public class PeopleHandler : MonoBehaviour
         foreach (Person person in people)
         {
 
-            add_activity_time(person);
+            if (!world_manager.lockdown)
+            {
+                person.in_lockdown = false;
 
-            add_path(person);
+                add_activity_time(person);
+
+                add_path(person);
+
+            }
+            else
+            {
+                if (!person.in_lockdown)
+                {
+                    person.in_lockdown = true;
+                    person.clear_path();
+
+                    CityCell current_cell = city_handler.get_cell_by_coords(Mathf.FloorToInt(person.x), Mathf.FloorToInt(person.y));
+                    if (!current_cell.road && !(current_cell.x == person.house.x && current_cell.y == person.house.y))
+                    {
+                        current_cell = current_cell.closest_road;
+                    }
+                    find_path(
+                        person,
+                        current_cell,
+                        person.house
+                    );
+                }
+            }
 
             move_people(person);
 
@@ -258,18 +284,21 @@ public class PeopleHandler : MonoBehaviour
         {
             find_path(
                 person,
-                person.house,
+                person.house.closest_road,
                 person.activity
             );
             person.x = person.house.x;
             person.y = person.house.y;
         }
 
-        if (end_work_time_check || end_school_time_check || end_social_time_check)
+        CityCell current_cell = city_handler.get_cell_by_coords(Mathf.FloorToInt(person.x), Mathf.FloorToInt(person.y));
+        if (
+            (end_work_time_check || end_school_time_check || end_social_time_check) 
+            && !(current_cell.x == person.house.x && current_cell.y == person.house.y))
         {
             find_path(
                 person,
-                person.activity,
+                person.activity.closest_road,
                 person.house
             );
             person.x = person.activity.x;
@@ -277,12 +306,15 @@ public class PeopleHandler : MonoBehaviour
         }
     }
 
-    void find_path(Person person, CityCell start, CityCell end)
+    void find_path(Person person, CityCell start_road, CityCell end)
     {
+
+        if (start_road.x == end.x && start_road.y == end.y) { return; }
+
         Hashtable start_hashtable = PeopleUtils.add_neighbour_directions(
             road_cells,
             PeopleUtils.road_location(
-                start.closest_road
+                start_road
             )
         );
         Hashtable end_hashtable = PeopleUtils.road_location(
