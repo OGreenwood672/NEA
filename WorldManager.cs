@@ -48,7 +48,11 @@ public class WorldManager : MonoBehaviour  // Needed as added to World Manager O
     // Virus Variables
     public float chance_of_infection; // 0 - 1
     public int rate_of_infection_in_ticks;
-    public int virus_range_radius;
+    public float virus_range_radius;
     public float initial_infected_probabilty;
+
+    public float social_distancing_effect;
+    public float mask_effect;
+    public bool lockdown;
 
 }

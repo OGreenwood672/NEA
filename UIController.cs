@@ -10,6 +10,7 @@ public class UIController : MonoBehaviour
     public GameObject settings_screen;
 
     public GameObject info_box;
+    public GameObject control_box;
 
     public CityHandler city_handler;
     public WorldManager world_manager;
@@ -18,6 +19,7 @@ public class UIController : MonoBehaviour
     {
         home_screen.SetActive(false);
         info_box.SetActive(true);
+        control_box.SetActive(true);
         city_handler.enabled = true;
     }
 
@@ -184,6 +186,55 @@ public class UIController : MonoBehaviour
     {
         world_manager.initial_infected_probabilty = initial_infected_slider.value;
         initial_infected_text.text = "(" + initial_infected_slider.value + ")";
+    }
+
+
+    public Image social_distancing_checkbox;
+    private bool social_distancing = false;
+    public void update_social_distancing()
+    {
+        social_distancing = !social_distancing;
+        if (social_distancing)
+        {
+            social_distancing_checkbox.color = new Color32(0, 255, 0, 255);
+            world_manager.virus_range_radius *= (1-world_manager.social_distancing_effect);
+        }
+        else 
+        {
+            social_distancing_checkbox.color = new Color32(255, 0, 0, 255);
+            world_manager.virus_range_radius *= (1/(1-world_manager.social_distancing_effect));
+        }
+    }
+
+    public Image masks_checkbox;
+    private bool masks = false;
+    public void update_masks()
+    {
+        masks = !masks;
+        if (masks)
+        {
+            masks_checkbox.color = new Color32(0, 255, 0, 255);
+            world_manager.chance_of_infection *= (1-world_manager.mask_effect);
+        }
+        else 
+        {
+            masks_checkbox.color = new Color32(255, 0, 0, 255);
+            world_manager.chance_of_infection *= (1/(1-world_manager.mask_effect));
+        }
+    }
+
+    public Image lockdown_checkbox;
+    public void update_lockdown()
+    {
+        world_manager.lockdown = !world_manager.lockdown;
+        if (world_manager.lockdown)
+        {
+            lockdown_checkbox.color = new Color32(0, 255, 0, 255);
+        }
+        else 
+        {
+            lockdown_checkbox.color = new Color32(255, 0, 0, 255);
+        }
     }
 
     void Start()

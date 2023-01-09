@@ -8,7 +8,7 @@ public class VirusHandler
     public static void infect_people(WorldManager world_manager, List<Person> people, Person transmitter)
     {
 
-        int virus_range_radius = world_manager.virus_range_radius;
+        float virus_range_radius = world_manager.virus_range_radius;
         float chance_of_infection = world_manager.chance_of_infection;
 
         int seed = world_manager.seed;
@@ -17,7 +17,7 @@ public class VirusHandler
         foreach (Person person in people)
         {
 
-            if (transmitter.x == person.x && transmitter.y == person.y || person.infected || !person.renderer.enabled)
+            if (transmitter == person || person.infected || !person.renderer.enabled)
             {
                 continue;
             }
