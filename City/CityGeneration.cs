@@ -76,7 +76,7 @@ public class CityGeneration
         }
         
         // Look into
-        if (seed % 10 == 0) { seed++; }
+        //if (seed % 10 == 0) { seed++; }
 
         //Functions to generate City
         add_noise();
@@ -180,7 +180,7 @@ public class CityGeneration
         float work_ratio = num_of_works / total;
         float house_ratio = num_of_houses / total;
         
-        for (let i=0; i<num_of_districts; i++)
+        for (int i=0; i<num_of_districts; i++)
         {
             float probabilty = (float)(rnd.Next(101) + 1) / 100;
             if (probabilty < work_ratio)

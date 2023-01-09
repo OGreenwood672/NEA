@@ -189,6 +189,27 @@ public class UIController : MonoBehaviour
     void Start()
     {
 
+        pop_slider.value = world_manager.population_size;
+        width_slider.value = world_manager.width;
+        height_slider.value = world_manager.height;
+        seed_slider.value = world_manager.seed;
+        district_comp_slider.value = world_manager.district_competition;
+        district_count_slider.value = world_manager.num_of_districts;
+        vertical_road_slider.value = world_manager.vertical_road_threshhold;
+        horizontal_road_slider.value = world_manager.horizontal_road_threshhold;
+        blocksize_slider.value = world_manager.blocksize;
+        work_ratio_slider.value = world_manager.num_of_works;
+        school_ratio_slider.value = world_manager.num_of_schools;
+        social_ratio_slider.value = world_manager.num_of_socials;
+        house_ratio_slider.value = world_manager.num_of_houses;
+        speed_slider.value = world_manager.speed;
+        ticks_in_day_slider.value = world_manager.ticks_in_day;
+        infection_chance_slider.value = world_manager.chance_of_infection;
+        rate_of_infection_slider.value = world_manager.rate_of_infection_in_ticks;
+        virus_range_slider.value = world_manager.virus_range_radius;
+        initial_infected_slider.value = world_manager.initial_infected_probabilty;
+
+
         pop_text.text = "(" + pop_slider.value + ")";
         width_text.text = "(" + width_slider.value + ")";
         height_text.text = "(" + height_slider.value + ")";
