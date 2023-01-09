@@ -64,7 +64,8 @@ public class CityGeneration
 
     public CityCell[,] generate_city()
     {
-
+        // Initialised City in a 2D array of width x height containing CityCell object
+        // Each object is given x and y coordinates
         city = new CityCell[height, width];
         for (int i=0; i<height; i++)
         {
@@ -73,19 +74,23 @@ public class CityGeneration
                 city[i, j] = new CityCell(j, i);
             }
         }
-
+        
+        // Look into
         if (seed % 10 == 0) { seed++; }
 
+        //Functions to generate City
         add_noise();
         add_districts();
         enable_border_compeition();
         add_roads();
+        
+        // For people travelling from building to building
         add_closest_road();
 
         return city;
     }
 
-
+    // Added modified noise attribute to every cell in the city
     private void add_noise()
     {
 
@@ -110,7 +115,8 @@ public class CityGeneration
             y_off += inc;
         }
     }
-
+    
+    // Add Districts to the city in random locations
     private void add_districts()
     {
 
@@ -119,7 +125,8 @@ public class CityGeneration
         int current_index = 0;
 
         System.Random rnd = new System.Random(seed);
-
+        
+        // Finds <num_of_districts> unique coordinates whcih can be used to represent a district
         while (true)
         {
             
@@ -150,15 +157,54 @@ public class CityGeneration
             }
 
         }
-
+        
+        // Getting a list of the CityCell objects that represent the districts
         CityCell[] random_districts = new CityCell[num_of_districts];
         for (int i=0; i<num_of_districts; i++)
         {
             random_districts[i] = city[random_district_coords[i, 0], random_district_coords[i, 1]];
         }
         
+        
+        // Give each district a different type:
+        //  Work
+        //  School
+        //  Social
+        //  House
+        Dictionary<int, string> district_types = new Dictionary<int, string>();
+        
+        float total = (float)(num_of_schools + num_of_socials + num_of_works + num_of_houses);
 
+        float school_ratio = num_of_schools / total;
+        float social_ratio = num_of_socials / total;
+        float work_ratio = num_of_works / total;
+        float house_ratio = num_of_houses / total;
+        
+        for (let i=0; i<num_of_districts; i++)
+        {
+            float probabilty = (float)(rnd.Next(101) + 1) / 100;
+            if (probabilty < work_ratio)
+            {
+                district_types.Add(i, "work");
 
+            } else if (probabilty < school_ratio + work_ratio)
+            {
+                district_types.Add(i, "school");
+
+            } else if (probabilty < school_ratio + work_ratio + social_ratio)
+            {
+                district_types.Add(i, "social");
+
+            } else
+            {
+                district_types.Add(i, "house");
+
+            }
+            // city[col, row].set_district(districts[distances[0, 1] % districts.Length]); // +1
+        }
+        
+
+        // Finds the closest district for every cell in the city and apply district type to that cell
         for (int col=0; col<height; col++)
         {
             for (int row=0; row<width; row++)
@@ -174,37 +220,13 @@ public class CityGeneration
 
                 distances = CityGenerationsUtilities.merge_sort_2d(distances, 0);
 
-                
-                float total = (float)(num_of_schools + num_of_socials + num_of_works + num_of_houses);
-
-                float school_ratio = num_of_schools / total;
-                float social_ratio = num_of_socials / total;
-                float work_ratio = num_of_works / total;
-                float house_ratio = num_of_houses / total;
-
-                float probabilty = (float)(rnd.Next(101) + 1) / 100;
-                if (probabilty < work_ratio)
-                {
-                    city[col, row].set_district("work");
-
-                } else if (probabilty < school_ratio + work_ratio)
-                {
-                    city[col, row].set_district("school");
-
-                } else if (probabilty < school_ratio + work_ratio + social_ratio)
-                {
-                    city[col, row].set_district("social");
-
-                } else
-                {
-                    city[col, row].set_district("house");
-
-                }
-                // city[col, row].set_district(districts[distances[0, 1] % districts.Length]); // +1
+                city[col, row].set_district(district_types[distances[0, 1]]);
+            
             }
         }
     }
-
+    
+    // Allows district have unperfect borders providing a more realistic city
     private void enable_border_compeition()
     {
 
@@ -231,10 +253,12 @@ public class CityGeneration
         }
 
     }
-
+    
+    // Adds roads to the city
     private void add_roads()
     {
-
+        
+        //Vertical Roads
         List<int> main_roads = new List<int>();
         main_roads.Add(0);
 
@@ -251,7 +275,7 @@ public class CityGeneration
                 }
             }
         }
-
+        // Horizontal roads
         int next = 0;
         foreach (int x_road in main_roads)
         {
@@ -288,7 +312,8 @@ public class CityGeneration
         }
 
     }
-
+    
+    // Add the closest road to all the cells
     void add_closest_road()
     {
 
