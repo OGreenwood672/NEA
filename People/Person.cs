@@ -149,8 +149,9 @@ public class Person
             }
 
             priority_open_set.RemoveAt(0);
+
             List<Hashtable> neighbours = get_neighbours(road_map, current);
-            foreach (Hashtable neighbour in neighbours)  // Seeds like 167 cause errors
+            foreach (Hashtable neighbour in neighbours)
             {
                 int tentative_g = (int)current["g"] + 1;
                 if (tentative_g < (int)neighbour["g"])
@@ -164,6 +165,8 @@ public class Person
             }
 
         }
+        // Debug.Log("start: x: " + start["x"] + ", y: " + start["y"]);
+        // Debug.Log("end x: " + end["x"] + ", y: " + end["y"]);
         // Debug.Log("Not found");
         // Error: roughly = 0.625%
 
@@ -242,10 +245,6 @@ public class Person
             if (directions[i])
             {
                 neighbours.Add(winning[i]);
-                if ((int)winning[i]["x"] == -1)
-                {
-                    Debug.Log(i + ": x: " + current["x"] + ", y: " + current["y"]);
-                }
             }
         }
 
@@ -260,8 +259,8 @@ public class Person
         for (int i=0; i<priority_open_set.Count; i++)
         {
 
-            if (   priority_open_set[i]["x"] == neighbour["x"]
-                && priority_open_set[i]["y"] == neighbour["y"])
+            if (   (int)priority_open_set[i]["x"] == (int)neighbour["x"]
+                && (int)priority_open_set[i]["y"] == (int)neighbour["y"])
             {
 
                 priority_open_set.RemoveAt(i);
@@ -280,6 +279,7 @@ public class Person
         }
 
         //Place neighbour in priority list according to their f score
+        bool found = false;
         for (int i=0; i<priority_open_set.Count; i++)
         {
 
@@ -287,11 +287,14 @@ public class Person
             {
 
                 priority_open_set.Insert(i, neighbour);
+                found = true;
                 break;
 
             }
 
         }
+        if (!found)
+            priority_open_set.Add(neighbour);
 
         return priority_open_set;
 

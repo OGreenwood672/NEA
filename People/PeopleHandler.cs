@@ -132,15 +132,23 @@ public class PeopleHandler : MonoBehaviour
             person.renderer.sprite = uninfected_sprite;
             person.renderer.enabled = false;
 
-            if (rnd.Next(101) / 100f < world_manager.initial_infected_probabilty)
-            {
-                person.infected = true;
-                person.renderer.sprite = infected_sprite;
-            }
+            // if (rnd.Next(101) / 100f < world_manager.initial_infected_probabilty)
+            // {
+            //     person.infected = true;
+            //     person.renderer.sprite = infected_sprite;
+            // }
 
             people.Add(
                 person
             );
+        }
+
+        int no_of_infected = Mathf.CeilToInt(
+            world_manager.population_size * world_manager.initial_infected_probabilty
+        );
+        for (int i=0; i<no_of_infected; i++)
+        {
+            people[i].infected = true;
         }
         
     }
