@@ -34,7 +34,8 @@ public class Person
         CityCell house,
         GameObject parent,
         float x_off,
-        float y_off
+        float y_off,
+        float immunity
     )
     {
 
@@ -43,8 +44,10 @@ public class Person
 
         this.activity_time = 0;
 
-        is_dead = false;
-        infected = false;
+        this.immunity = immunity;
+
+        this.is_dead = false;
+        this.infected = false;
 
         this.path = new List<int[]>();
         this.temp_path = new List<int[]>();
