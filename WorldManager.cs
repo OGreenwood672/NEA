@@ -46,6 +46,8 @@ public class WorldManager : MonoBehaviour  // Needed as added to World Manager O
     public int end_social_time_range;
 
     // Virus Variables
+    public int immunity_range;
+    public float death_chance;
     public float chance_of_infection; // 0 - 1
     public int rate_of_infection_in_ticks;
     public float virus_range_radius;
