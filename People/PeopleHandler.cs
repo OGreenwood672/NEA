@@ -470,11 +470,24 @@ public class PeopleHandler : MonoBehaviour
         int count = 0;
         foreach (Person person in people)
         {
-            if (person.infected)
+            if (person.infected && !person.is_dead)
                 count++;
         }
         return count;
     }
+
+    public int get_death_count()
+    {
+        int count = 0;
+        foreach (Person person in people)
+        {
+            if (person.is_dead)
+                count++;
+        }
+        return count;
+    }
+
+
 
     public int get_population_count()
     {
