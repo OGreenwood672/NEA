@@ -166,6 +166,9 @@ public class PeopleHandler : MonoBehaviour
         foreach (Person person in people)
         {
 
+            if (person.is_dead)
+                continue;
+
             if (!world_manager.lockdown)
             {
                 person.in_lockdown = false;
@@ -232,6 +235,9 @@ public class PeopleHandler : MonoBehaviour
             {
                 person.renderer.enabled = false;
             }
+
+            person.is_dead = check_if_dead(person);
+            
             
         }
     }
