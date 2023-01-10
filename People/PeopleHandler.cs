@@ -103,63 +103,14 @@ public class PeopleHandler : MonoBehaviour
         for (int i=0; i<world_manager.population_size; i++)
         {
 
-            CityCell activity;
-            int activity_index = rnd.Next(no_of_activities);
-            
-            if (activity_index < work_cells.Count)
-            {
-                activity = work_cells[activity_index];
-            }
-            else if (activity_index < work_cells.Count + school_cells.Count)
-            {
-                activity = school_cells[activity_index - work_cells.Count];
-            }
-            else
-            {
-                activity = social_cells[
-                    activity_index
-                  - work_cells.Count
-                  - school_cells.Count
-                ];
-            }
-
-            int home_index = rnd.Next(house_cells.Count);
-            CityCell home = house_cells[home_index];
-
-            float offset_range = 0.4f;
-
-            float immunity = rnd.Next(immunity_range) / 100f;
-
-            Person person = new Person(
-                                activity,
-                                home,
-                                parent,
-                                (float)rnd.Next((int)(offset_range * 100)) / 100f - (offset_range/2.0f),
-                                (float)rnd.Next((int)(offset_range * 100)) / 100f - (offset_range/2.0f),
-                                immunity
-                            );
-
-            person.renderer.sprite = uninfected_sprite;
-            person.renderer.enabled = false;
-
-            // if (rnd.Next(101) / 100f < world_manager.initial_infected_probabilty)
-            // {
-            //     person.infected = true;
-            //     person.renderer.sprite = infected_sprite;
-            // }
+            Person person = create_person();
 
             people.Add(
                 person
             );
         }
 
-        int no_of_infected = Mathf.CeilToInt(
-            world_manager.population_size * world_manager.initial_infected_probabilty
-        );
-        for (int i=0; i<no_of_infected; i++)
-        {
-            people[i].infected = true;
-        }
+        begin_breakout();
         
     }
 
@@ -178,11 +129,7 @@ public class PeopleHandler : MonoBehaviour
         if (world_manager.pause)
             return;
 
-        game_ticks++;
-        if (game_ticks > ticks_in_day)
-        {
-            game_ticks -= ticks_in_day;
-        }
+        update_game_ticks();
 
         foreach (Person person in people)
         {
@@ -204,22 +151,7 @@ public class PeopleHandler : MonoBehaviour
             }
             else
             {
-                if (!person.in_lockdown)
-                {
-                    person.in_lockdown = true;
-                    person.clear_path();
-
-                    CityCell current_cell = city_handler.get_cell_by_coords(Mathf.FloorToInt(person.x), Mathf.FloorToInt(person.y));
-                    if (!current_cell.road && !(current_cell.x == person.house.x && current_cell.y == person.house.y))
-                    {
-                        current_cell = current_cell.closest_road;
-                    }
-                    find_path(
-                        person,
-                        current_cell,
-                        person.house
-                    );
-                }
+                execute_lockdown(person);
             }
 
             move_people(person);
@@ -228,41 +160,89 @@ public class PeopleHandler : MonoBehaviour
             {
                 VirusHandler.infect_people(world_manager, people, person);
             }
-            if (person.infected)
-            {
-                person.renderer.sprite = infected_sprite;
-            }
-            else
-            {
-                person.renderer.sprite = uninfected_sprite;
-            }
+
+            update_sprite(person);
 
 
-            if (person.has_path())
-            {
-                person.renderer.enabled = true;
-                person.game_object.transform.position = Camera.main.GetComponent<Camera>().ScreenToWorldPoint(  // Struggled with coords
-                                                    new Vector3(
-                                                        (float)Screen.width * (person.x + 0.5f + person.x_off) / width,
-                                                        (float)Screen.height - (float)Screen.height * (person.y + 0.5f + person.y_off) / height,
-                                                        0.95f)
-                                                    );
-
-                person.game_object.transform.localScale = Camera.main.GetComponent<Camera>().ScreenToWorldPoint(
-                                                new Vector3(
-                                                    ((float)Screen.width / (float)width) * 0.1f + Screen.width/2,
-                                                    ((float)Screen.height / (float)height) * 0.1f + Screen.height/2,
-                                                    1.0f)
-                                                );
-            }
-            else
-            {
-                person.renderer.enabled = false;
-            }
+            render_person(person);
 
             person.is_dead = check_if_dead(person);
             
             
+        }
+    }
+
+    void update_game_ticks()
+    {
+        game_ticks++;
+        if (game_ticks > ticks_in_day)
+        {
+            game_ticks -= ticks_in_day;
+        }
+    }
+
+    Person create_person()
+    {
+        CityCell activity;
+        int activity_index = rnd.Next(no_of_activities);
+        
+        if (activity_index < work_cells.Count)
+        {
+            activity = work_cells[activity_index];
+        }
+        else if (activity_index < work_cells.Count + school_cells.Count)
+        {
+            activity = school_cells[activity_index - work_cells.Count];
+        }
+        else
+        {
+            activity = social_cells[
+                activity_index
+                - work_cells.Count
+                - school_cells.Count
+            ];
+        }
+
+        int home_index = rnd.Next(house_cells.Count);
+        CityCell home = house_cells[home_index];
+
+        float offset_range = 0.4f;
+
+        float immunity = rnd.Next(immunity_range) / 100f;
+
+        Person person = new Person(
+                            activity,
+                            home,
+                            parent,
+                            (float)rnd.Next((int)(offset_range * 100)) / 100f - (offset_range/2.0f),
+                            (float)rnd.Next((int)(offset_range * 100)) / 100f - (offset_range/2.0f),
+                            immunity
+                        );
+
+        person.renderer.sprite = uninfected_sprite;
+        person.renderer.enabled = false;
+    }
+
+    void update_sprite(Person person)
+    {
+        if (person.infected)
+        {
+            person.renderer.sprite = infected_sprite;
+        }
+        else
+        {
+            person.renderer.sprite = uninfected_sprite;
+        }
+    }
+
+    void begin_breakout()
+    {
+        int no_of_infected = Mathf.CeilToInt(
+            world_manager.population_size * world_manager.initial_infected_probabilty
+        );
+        for (int i=0; i<no_of_infected; i++)
+        {
+            people[i].infected = true;
         }
     }
 
@@ -288,6 +268,26 @@ public class PeopleHandler : MonoBehaviour
         }
         return false;
 
+    }
+
+    void execute_lockdown(Person person)
+    {
+        if (!person.in_lockdown)
+        {
+            person.in_lockdown = true;
+            person.clear_path();
+
+            CityCell current_cell = city_handler.get_cell_by_coords(Mathf.FloorToInt(person.x), Mathf.FloorToInt(person.y));
+            if (!current_cell.road && !(current_cell.x == person.house.x && current_cell.y == person.house.y))
+            {
+                current_cell = current_cell.closest_road;
+            }
+            find_path(
+                person,
+                current_cell,
+                person.house
+            );
+        }
     }
 
     void add_activity_time(Person person)
@@ -425,6 +425,31 @@ public class PeopleHandler : MonoBehaviour
 
         }
 
+    }
+
+    void render_person(Person person)
+    {
+        if (person.has_path())
+        {
+            person.renderer.enabled = true;
+            person.game_object.transform.position = Camera.main.GetComponent<Camera>().ScreenToWorldPoint(  // Struggled with coords
+                                                new Vector3(
+                                                    (float)Screen.width * (person.x + 0.5f + person.x_off) / width,
+                                                    (float)Screen.height - (float)Screen.height * (person.y + 0.5f + person.y_off) / height,
+                                                    0.95f)
+                                                );
+
+            person.game_object.transform.localScale = Camera.main.GetComponent<Camera>().ScreenToWorldPoint(
+                                            new Vector3(
+                                                ((float)Screen.width / (float)width) * 0.1f + Screen.width/2,
+                                                ((float)Screen.height / (float)height) * 0.1f + Screen.height/2,
+                                                1.0f)
+                                            );
+        }
+        else
+        {
+            person.renderer.enabled = false;
+        }
     }
 
 

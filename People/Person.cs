@@ -178,7 +178,6 @@ public class Person
         // Debug.Log("start: x: " + start["x"] + ", y: " + start["y"]);
         // Debug.Log("end x: " + end["x"] + ", y: " + end["y"]);
         // Debug.Log("Not found");
-        // Error: roughly = 0.625%
 
         return false;
 
