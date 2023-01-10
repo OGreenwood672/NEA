@@ -36,6 +36,8 @@ public class PeopleHandler : MonoBehaviour
 
     private int seed;
 
+    private int immunity_range;
+
     public GameObject parent;
 
     public Sprite infected_sprite;
@@ -60,6 +62,8 @@ public class PeopleHandler : MonoBehaviour
         seed = world_manager.seed;
         width = world_manager.width;
         height = world_manager.height;
+
+        immunity_range = world_manager.immunity_range;
 
         speed = world_manager.speed;
 
@@ -121,12 +125,15 @@ public class PeopleHandler : MonoBehaviour
 
             float offset_range = 0.4f;
 
+            float immunity = rnd.Next(immunity_range) / 100f
+
             Person person = new Person(
                                 activity,
                                 home,
                                 parent,
                                 (float)rnd.Next((int)(offset_range * 100)) / 100f - (offset_range/2.0f),
-                                (float)rnd.Next((int)(offset_range * 100)) / 100f - (offset_range/2.0f)
+                                (float)rnd.Next((int)(offset_range * 100)) / 100f - (offset_range/2.0f),
+                                immunity
                             );
 
             person.renderer.sprite = uninfected_sprite;
