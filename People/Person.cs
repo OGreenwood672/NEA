@@ -45,7 +45,7 @@ public class Person
         this.house = house;
 
         this.activity_time = 0;
-        this.infected_time = 0;
+        this.infected_time = -1;
 
         this.immunity = immunity;
 
