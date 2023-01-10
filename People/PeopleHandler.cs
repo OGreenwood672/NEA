@@ -43,7 +43,7 @@ public class PeopleHandler : MonoBehaviour
     public Sprite infected_sprite;
     public Sprite uninfected_sprite;
 
-    private List<Person> people = new List<Person>();
+    private List<Person> people;
 
     private List<CityCell> work_cells;
     private List<CityCell> school_cells;
@@ -55,13 +55,14 @@ public class PeopleHandler : MonoBehaviour
     private List<Hashtable> road_map;
 
 
-    // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
 
         seed = world_manager.seed;
         width = world_manager.width;
         height = world_manager.height;
+
+        people = new List<Person>();
 
         immunity_range = world_manager.immunity_range;
 
@@ -90,6 +91,8 @@ public class PeopleHandler : MonoBehaviour
         road_cells = city_handler.get_roads();
 
         road_map = make_road_map();
+
+        game_ticks = 0;
 
         int no_of_activities = work_cells.Count
                              + school_cells.Count
@@ -125,7 +128,7 @@ public class PeopleHandler : MonoBehaviour
 
             float offset_range = 0.4f;
 
-            float immunity = rnd.Next(immunity_range) / 100f
+            float immunity = rnd.Next(immunity_range) / 100f;
 
             Person person = new Person(
                                 activity,
@@ -160,9 +163,20 @@ public class PeopleHandler : MonoBehaviour
         
     }
 
+    void OnDisable()
+    {
+        foreach (Person person in people)
+        {
+            person.renderer.enabled = false;
+        }
+    }
+
     // 50 fps
     void FixedUpdate()
     {
+
+        if (world_manager.pause)
+            return;
 
         game_ticks++;
         if (game_ticks > ticks_in_day)
@@ -174,7 +188,10 @@ public class PeopleHandler : MonoBehaviour
         {
 
             if (person.is_dead)
+            {
+                person.renderer.enabled = false;
                 continue;
+            }
 
             if (!world_manager.lockdown)
             {
@@ -255,7 +272,7 @@ public class PeopleHandler : MonoBehaviour
         if (person.infected_time == 0)
         {
             int probability = rnd.Next(101);
-            if (probability < world_manager.death_chance)
+            if (probability > world_manager.death_chance)
             {
                 return true;
             }

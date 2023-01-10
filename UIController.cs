@@ -13,6 +13,7 @@ public class UIController : MonoBehaviour
     public GameObject control_box;
 
     public CityHandler city_handler;
+    public PeopleHandler people_handler;
     public WorldManager world_manager;
 
     public void on_start_simulation()
@@ -33,6 +34,26 @@ public class UIController : MonoBehaviour
     {
         home_screen.SetActive(true);
         settings_screen.SetActive(false);
+    }
+
+    public void quit()
+    {
+        city_handler.enabled = false;
+        people_handler.enabled = false;
+        home_screen.SetActive(true);
+        info_box.SetActive(false);
+        control_box.SetActive(false);
+        world_manager.pause = false;
+    }
+
+    public Text pause_text;
+    public void on_pause()
+    {
+        world_manager.pause = !world_manager.pause;
+        if (world_manager.pause)
+            pause_text.text = "PLAY";
+        else
+            pause_text.text = "PAUSE";
     }
 
     public Text pop_text;
@@ -188,6 +209,22 @@ public class UIController : MonoBehaviour
         initial_infected_text.text = "(" + initial_infected_slider.value + ")";
     }
 
+    public Text immunity_text;
+    public Slider immunity_slider;
+    public void edit_immunity()
+    {
+        world_manager.immunity_range = Mathf.FloorToInt(immunity_slider.value);
+        immunity_text.text = "(" + immunity_slider.value + ")";
+    }
+
+    public Text death_chance_text;
+    public Slider death_chance_slider;
+    public void edit_death_chance()
+    {
+        world_manager.death_chance = death_chance_slider.value;
+        death_chance_text.text = "(" + death_chance_slider.value + ")";
+    }
+
 
     public Image social_distancing_checkbox;
     private bool social_distancing = false;
@@ -254,6 +291,8 @@ public class UIController : MonoBehaviour
         social_ratio_slider.value = world_manager.num_of_socials;
         house_ratio_slider.value = world_manager.num_of_houses;
         speed_slider.value = world_manager.speed;
+        death_chance_slider.value = world_manager.death_chance;
+        immunity_slider.value = world_manager.immunity_range;
         ticks_in_day_slider.value = world_manager.ticks_in_day;
         infection_chance_slider.value = world_manager.chance_of_infection;
         rate_of_infection_slider.value = world_manager.rate_of_infection_in_ticks;
@@ -275,6 +314,8 @@ public class UIController : MonoBehaviour
         social_ratio_text.text = "(" + social_ratio_slider.value + ")";
         house_ratio_text.text = "(" + house_ratio_slider.value + ")";
         speed_text.text = "(" + speed_slider.value + ")";
+        death_chance_text.text = "(" + death_chance_slider.value + ")";
+        immunity_text.text = "(" + immunity_slider.value + ")";
         ticks_in_day_text.text = "(" + ticks_in_day_slider.value + ")";
         infection_chance_text.text = "(" + infection_chance_slider.value + ")";
         rate_of_infection_text.text = "(" + rate_of_infection_slider.value + ")";

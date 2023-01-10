@@ -33,7 +33,7 @@ public class CityHandler : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
 
         width = world_manager.width;
@@ -57,6 +57,16 @@ public class CityHandler : MonoBehaviour
 
         //Enables people script
         people_handler.enabled = true;
+
+    }
+
+    void OnDisable()
+    {
+
+        foreach (Transform child in city_parent.transform)
+        {
+            Destroy(child.gameObject);
+        }
 
     }
 

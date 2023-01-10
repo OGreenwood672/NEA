@@ -6,6 +6,8 @@ public class WorldManager : MonoBehaviour  // Needed as added to World Manager O
 {
     public int seed;
 
+    public bool pause;
+
     public int population_size;
 
     public int width;
