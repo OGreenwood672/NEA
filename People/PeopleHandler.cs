@@ -94,10 +94,6 @@ public class PeopleHandler : MonoBehaviour
 
         game_ticks = 0;
 
-        int no_of_activities = work_cells.Count
-                             + school_cells.Count
-                             + social_cells.Count;
-
         rnd = new System.Random(seed);
 
         for (int i=0; i<world_manager.population_size; i++)
@@ -183,6 +179,11 @@ public class PeopleHandler : MonoBehaviour
 
     Person create_person()
     {
+
+        int no_of_activities = work_cells.Count
+                             + school_cells.Count
+                             + social_cells.Count;
+
         CityCell activity;
         int activity_index = rnd.Next(no_of_activities);
         
@@ -221,6 +222,8 @@ public class PeopleHandler : MonoBehaviour
 
         person.renderer.sprite = uninfected_sprite;
         person.renderer.enabled = false;
+
+        return person;
     }
 
     void update_sprite(Person person)
