@@ -32,7 +32,7 @@ public class VirusHandler
                 if ( rnd.Next(1001) / 1000f < chance_of_infection * (1-person.immunity) )
                 {
                     person.infected = true;
-                    person.infected_time = rnd.Next(world_manager.infected_time_range)
+                    person.infected_time = rnd.Next(world_manager.infected_time_range);
                 }
             }
 
