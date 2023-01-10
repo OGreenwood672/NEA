@@ -236,6 +236,25 @@ public class PeopleHandler : MonoBehaviour
         }
     }
 
+    bool check_if_dead(Person person)
+    {
+        
+        if (game_ticks == person.infected_time)
+        {
+            int probability = rnd.Next(101);
+            if (probability < world_manager.death_chance)
+            {
+                return true;
+            }
+            else
+            {
+                person.infected = false;
+            }
+        }
+        return false;
+
+    }
+
     void add_activity_time(Person person)
     {
 
