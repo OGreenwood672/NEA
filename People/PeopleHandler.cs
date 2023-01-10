@@ -252,7 +252,7 @@ public class PeopleHandler : MonoBehaviour
     bool check_if_dead(Person person)
     {
         
-        if (game_ticks == person.infected_time)
+        if (person.infected_time == 0)
         {
             int probability = rnd.Next(101);
             if (probability < world_manager.death_chance)
@@ -262,7 +262,12 @@ public class PeopleHandler : MonoBehaviour
             else
             {
                 person.infected = false;
+                person.infected_time = -1;
             }
+        }
+        else if (person.infected_time > 0)
+        {
+            person.infected_time -= 1;
         }
         return false;
 
