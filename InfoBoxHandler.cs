@@ -33,6 +33,7 @@ public class InfoBoxHandler : MonoBehaviour
     {
 
         int infected_count = people_handler.get_infected_count();
+        int death_count = people_handler.get_death_count();
         int population = people_handler.get_population_count();
         int game_ticks = people_handler.get_game_ticks();
 
@@ -41,6 +42,7 @@ public class InfoBoxHandler : MonoBehaviour
                           + "\nTime: " + calculate_time(game_ticks)
                           + "\nPopulation: " + population
                           + "\nInfected: " + infected_count
+                          + "\nDead: " + death_count
                         );
         
     }
