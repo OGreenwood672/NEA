@@ -29,7 +29,7 @@ public class VirusHandler
                 && transmitter.y - virus_range_radius < person.y
                 )
             {
-                if ( rnd.Next(1001) / 1000f < chance_of_infection )
+                if ( rnd.Next(1001) / 1000f < chance_of_infection * (1-person.immunity) )
                 {
                     person.infected = true;
                 }
