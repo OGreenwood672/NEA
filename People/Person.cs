@@ -19,6 +19,8 @@ public class Person
 
     public int activity_time;
 
+    public float immunity;
+
     public bool infected;
     public bool is_dead;
 
