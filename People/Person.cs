@@ -20,6 +20,8 @@ public class Person
     public int activity_time;
 
     public float immunity;
+    
+    public int infected_time;
 
     public bool infected;
     public bool is_dead;
@@ -43,6 +45,7 @@ public class Person
         this.house = house;
 
         this.activity_time = 0;
+        this.infected_time = 0;
 
         this.immunity = immunity;
 
