@@ -20,6 +20,7 @@ public class Person
     public int activity_time;
 
     public bool infected;
+    public bool is_dead;
 
     public bool in_lockdown;
 
@@ -39,7 +40,8 @@ public class Person
         this.house = house;
 
         this.activity_time = 0;
-        
+
+        is_dead = false;
         infected = false;
 
         this.path = new List<int[]>();
