@@ -83,14 +83,14 @@ public class CityHandler : MonoBehaviour
 
                 cell.transform.parent = city_parent.transform;
 
-                cell.transform.position = Camera.main.GetComponent<Camera>().ScreenToWorldPoint(  // Struggled with coords
+                cell.transform.position = Camera.main.GetComponent<Camera>().ScreenToWorldPoint(
                                                     new Vector3(
                                                         Screen.width * (x + 0.5f) / width,
                                                         Screen.height - Screen.height * (y + 0.5f) / height,
                                                         1.0f)
                                                     );
 
-                cell.transform.localScale = Camera.main.GetComponent<Camera>().ScreenToWorldPoint(    // * 0.25f works
+                cell.transform.localScale = Camera.main.GetComponent<Camera>().ScreenToWorldPoint(
                                                     new Vector3(
                                                         ((float)Screen.width / (float)width) * 0.25f + Screen.width/2,
                                                         ((float)Screen.height / (float)height) * 0.27f + Screen.height/2,

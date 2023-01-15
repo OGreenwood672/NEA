@@ -90,7 +90,7 @@ public class PeopleHandler : MonoBehaviour
         house_cells = city_handler.get_houses();
         road_cells = city_handler.get_roads();
 
-        road_map = make_road_map();
+        road_map = Pathfinding.make_road_map(road_cells);
 
         game_ticks = 0;
 
@@ -376,25 +376,26 @@ public class PeopleHandler : MonoBehaviour
 
         if (start_road.x == end.x && start_road.y == end.y) { return; }
 
-        Hashtable start_hashtable = PeopleUtils.add_neighbour_directions(
+        Hashtable start_hashtable = Pathfinding.add_neighbour_directions(
             road_cells,
-            PeopleUtils.road_location(
+            Pathfinding.road_location(
                 start_road
             )
         );
-        Hashtable end_hashtable = PeopleUtils.road_location(
+        Hashtable end_hashtable = Pathfinding.road_location(
             end.closest_road
         );
 
-        bool found = person.a_star(
+        bool found = Pathfinding.a_star(
+            person,
             start_hashtable,
             end_hashtable,
-            copy_road_map(road_map)
+            Pathfinding.copy_road_map(road_map)
         );
 
         if (found)
         {
-            person.append_to_path(end);
+            person.append_cell_to_path(end);
         }
 
     }
@@ -455,67 +456,6 @@ public class PeopleHandler : MonoBehaviour
         }
     }
 
-
-    // Make set of coords useful for navigation using A* algorithm
-    // O(n^2)
-    List<Hashtable> make_road_map()  // IT IS USEFUL, ODD INDEXS; Lol not true
-    {
-
-        List<Hashtable> map = new List<Hashtable>();
-
-        foreach (CityCell road in road_cells)
-        {
-
-            Hashtable road_location = PeopleUtils.road_location(road);
-
-            // Loop thorugh all road twice vs
-            road_location = PeopleUtils.add_neighbour_directions(
-                road_cells,
-                road_location
-            );
-
-            bool[] neighbour_directions = new bool[4] {
-                (bool)road_location["left"],
-                (bool)road_location["right"],
-                (bool)road_location["up"],
-                (bool)road_location["down"]
-            };
-            
-            int neighbours = 0;
-            for (int i=0; i<4; i++)
-            {
-                if (neighbour_directions[i]) { neighbours++; }
-            }
-
-            bool opposite_roads = (neighbour_directions[0] && neighbour_directions[1])
-                               || (neighbour_directions[2] && neighbour_directions[3]);
-            if (!(neighbours == 2 && opposite_roads))
-            {
-
-                map.Add(
-                    road_location
-                );
-
-            }
-
-        }
-
-        return map;
-
-    }
-
-    List<Hashtable> copy_road_map(List<Hashtable> road_map)
-    {
-
-        List<Hashtable> new_road_map = new List<Hashtable>();
-        foreach (Hashtable road in road_map)
-        {
-            new_road_map.Add(
-                (Hashtable)road.Clone()
-            );
-        }
-        return new_road_map;
-    }
 
     public int get_game_ticks()
     {
