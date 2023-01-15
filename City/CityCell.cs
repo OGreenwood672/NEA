@@ -16,9 +16,9 @@ public class CityCell
     
     // 2D perlin noise value to determine which neighbouring district
     // wins the district competiton
-    public float noise;
+    private float noise;
     // District the cell belongs to. includes: School, workplace, social area
-    public string district;
+    private string district;
     // If the cell is a road
     public bool road;
 
@@ -43,10 +43,24 @@ public class CityCell
 
     }
 
+    // Getter for noise variable
+    public float get_noise() {
+
+        return noise;
+
+    }
+
+
     // Setter for district variable
     public void set_district(string new_district) {
 
         district = new_district;
+
+    }
+    // Getter for district variable
+    public string get_district() {
+
+        return district;
 
     }
 

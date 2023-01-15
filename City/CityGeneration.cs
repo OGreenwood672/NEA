@@ -75,9 +75,6 @@ public class CityGeneration
             }
         }
         
-        // Look into
-        //if (seed % 10 == 0) { seed++; }
-
         //Functions to generate City
         add_noise();
         add_districts();
@@ -115,18 +112,13 @@ public class CityGeneration
             y_off += inc;
         }
     }
-    
-    // Add Districts to the city in random locations
-    private void add_districts()
+
+    // Finds a set unique coordinates in the city
+    private int[,] get_unique_coords(int size, System.Random rnd)
     {
-
-
-        int[,] random_district_coords = new int[num_of_districts, 2];
+        int[,] random_coords = new int[size, 2];
         int current_index = 0;
-
-        System.Random rnd = new System.Random(seed);
         
-        // Finds <num_of_districts> unique coordinates whcih can be used to represent a district
         while (true)
         {
             
@@ -140,37 +132,30 @@ public class CityGeneration
             bool duplicate = false;
             for (int i=0; i<current_index; i++)
             {
-                if (random_district_coords[i, 0] == coords[0] &&
-                    random_district_coords[i, 1] == coords[1])
+                if (random_coords[i, 0] == coords[0] &&
+                    random_coords[i, 1] == coords[1])
                     {
                         duplicate = true;
                     }
             }
             if (!duplicate)
             {
-                random_district_coords[current_index, 0] = coords[0];
-                random_district_coords[current_index, 1] = coords[1];
+                random_coords[current_index, 0] = coords[0];
+                random_coords[current_index, 1] = coords[1];
                 current_index++;
 
-                if (current_index == num_of_districts) { break; }
+                if (current_index == size) { break; }
 
             }
 
         }
-        
-        // Getting a list of the CityCell objects that represent the districts
-        CityCell[] random_districts = new CityCell[num_of_districts];
-        for (int i=0; i<num_of_districts; i++)
-        {
-            random_districts[i] = city[random_district_coords[i, 0], random_district_coords[i, 1]];
-        }
-        
-        
-        // Give each district a different type:
-        //  Work
-        //  School
-        //  Social
-        //  House
+        return random_coords;
+    }
+
+    //FUCNTION: Make a dictionary with each district 'ID' mapped to it's district type
+    // eg (2, "work")
+    private Dictionary<int, string> make_district_dict(System.Random rnd)
+    {
         Dictionary<int, string> district_types = new Dictionary<int, string>();
         
         float total = (float)(num_of_schools + num_of_socials + num_of_works + num_of_houses);
@@ -202,9 +187,12 @@ public class CityGeneration
             }
             // city[col, row].set_district(districts[distances[0, 1] % districts.Length]); // +1
         }
-        
+        return district_types;
+    }
 
-        // Finds the closest district for every cell in the city and apply district type to that cell
+    //FUNCTION: Finds the closest district for every cell in the city and apply district type to that cell
+    private void assign_districts(Dictionary<int, string> district_types, CityCell[] random_districts)
+    {
         for (int col=0; col<height; col++)
         {
             for (int row=0; row<width; row++)
@@ -226,7 +214,32 @@ public class CityGeneration
         }
     }
     
-    // Allows district have unperfect borders providing a more realistic city
+    //FUNCTION: ADD DISTRICTS TO ALL CELLS IN CITY
+    private void add_districts()
+    {
+
+        System.Random rnd = new System.Random(seed);
+
+        int[,] random_district_coords = get_unique_coords(num_of_districts, rnd);
+        
+        // Getting a list of the CityCell objects that represent the districts
+        CityCell[] random_districts = new CityCell[num_of_districts];
+        for (int i=0; i<num_of_districts; i++)
+        {
+            random_districts[i] = city[random_district_coords[i, 0], random_district_coords[i, 1]];
+        }
+
+        // Make a dictionary with each district 'ID' mapped to it's district type
+        // eg (2, "work")
+        Dictionary<int, string> district_types = make_district_dict(rnd);
+
+        // Finds the closest district for every cell in the city and apply district type to that cell
+        assign_districts(district_types, random_districts);
+
+    }
+    
+    //FUNCTION: ALLOWS DISTRICTS TO HAVE BORDER MIXED WITH OTHER DISTRICTS
+    // EACH DISTRICT HAS A 50% CHANCE based off perlin noise TO WIN AN EDGE FROM ANOTHER DISTRCIT
     private void enable_border_compeition()
     {
 
@@ -235,30 +248,49 @@ public class CityGeneration
         {
             for (int x=0; x<width; x++)
             {
-                CityCell left = city[y, CityGenerationsUtilities.constrain(x-range, 0, width-1)];
-                CityCell right = city[y, CityGenerationsUtilities.constrain((x+range), 0, width-1)];
-                if (left.district != right.district)
+                CityCell left = city[
+                    y,
+                    CityGenerationsUtilities.constrain(
+                        (x-range), 
+                        0, 
+                        (width-1)
+                    )
+                ];
+                CityCell right = city[
+                    y,
+                    CityGenerationsUtilities.constrain(
+                        (x+range), 
+                        0, 
+                        (width-1)
+                    )
+                ];
+                if (left.get_district() != right.get_district())
                 {
-                    if (city[y, x].noise > 0.5)
+                    if (city[y, x].get_noise() > 0.5)
                     {
-                        city[y, x].set_district(left.district);
+                        city[y, x].set_district(left.get_district());
 
                     } else {
 
-                        city[y, x].set_district(right.district);
+                        city[y, x].set_district(right.get_district());
 
                     }
                 }
             }
         }
-
     }
     
-    // Adds roads to the city
+    // FUNCTION: CALLS ALL ADDING ROAD FUNCTIONS
     private void add_roads()
     {
-        
-        //Vertical Roads
+        List<int> main_roads = add_vertical_roads();
+        add_horizontal_roads(main_roads);
+    }
+
+    // FUNCTION: ADDS ROADS RUNNING VERTICAL THROUGH THE WHOLE CITY
+    // USES MODIFIED PERLIN NOISE
+    private List<int> add_vertical_roads()
+    {
         List<int> main_roads = new List<int>();
         main_roads.Add(0);
 
@@ -275,7 +307,13 @@ public class CityGeneration
                 }
             }
         }
-        // Horizontal roads
+        return main_roads;
+    }
+
+    // FUNCTION: ADDS HORIZONTAL ROADS IN BETWEEN THE VERTICAL ROADS
+    // USES MODDED PERLIN NOISE AND KEEPS AT LEAST A <blocksize> GAP
+    private void add_horizontal_roads(List<int> main_roads)
+    {
         int next = 0;
         foreach (int x_road in main_roads)
         {
@@ -310,7 +348,6 @@ public class CityGeneration
                 }
             }
         }
-
     }
     
     // Add the closest road to all the cells

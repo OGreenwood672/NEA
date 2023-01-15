@@ -296,7 +296,7 @@ public class PeopleHandler : MonoBehaviour
     void add_activity_time(Person person)
     {
 
-        if (person.activity.district == "work")
+        if (person.activity.get_district() == "work")
         {
             if (game_ticks == start_work_time)
             {
@@ -308,7 +308,7 @@ public class PeopleHandler : MonoBehaviour
             }
         }
 
-        if (person.activity.district == "school")
+        if (person.activity.get_district() == "school")
         {
             if (game_ticks == start_school_time)
             {
@@ -320,7 +320,7 @@ public class PeopleHandler : MonoBehaviour
             }
         }
 
-        if (person.activity.district == "social")
+        if (person.activity.get_district() == "social")
         {
             if (game_ticks == start_social_time)
             {
@@ -336,13 +336,13 @@ public class PeopleHandler : MonoBehaviour
     void add_path(Person person) 
     {
 
-        bool work_time_check = game_ticks == person.activity_time + start_work_time && person.activity.district == "work";
-        bool school_time_check = game_ticks == person.activity_time + start_school_time && person.activity.district == "school";
-        bool social_time_check = game_ticks == person.activity_time + start_social_time && person.activity.district == "social";
+        bool work_time_check = game_ticks == person.activity_time + start_work_time && person.activity.get_district() == "work";
+        bool school_time_check = game_ticks == person.activity_time + start_school_time && person.activity.get_district() == "school";
+        bool social_time_check = game_ticks == person.activity_time + start_social_time && person.activity.get_district() == "social";
 
-        bool end_work_time_check = game_ticks == person.activity_time + end_work_time && person.activity.district == "work";
-        bool end_school_time_check = game_ticks == person.activity_time + end_school_time && person.activity.district == "school";
-        bool end_social_time_check = game_ticks == person.activity_time + end_social_time && person.activity.district == "social";
+        bool end_work_time_check = game_ticks == person.activity_time + end_work_time && person.activity.get_district() == "work";
+        bool end_school_time_check = game_ticks == person.activity_time + end_school_time && person.activity.get_district() == "school";
+        bool end_social_time_check = game_ticks == person.activity_time + end_social_time && person.activity.get_district() == "social";
 
 
         if (work_time_check || school_time_check || social_time_check)

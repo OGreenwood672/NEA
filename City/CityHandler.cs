@@ -102,7 +102,7 @@ public class CityHandler : MonoBehaviour
                 if (city[y, x].road) {
                     renderer.sprite = road_sprite;
                 } else {
-                    switch (city[y, x].district)
+                    switch (city[y, x].get_district())
                     {
                         case "work":
                             renderer.sprite = work_sprite;
@@ -148,7 +148,7 @@ public class CityHandler : MonoBehaviour
                 } else 
                 {
 
-                    switch (city[y, x].district)
+                    switch (city[y, x].get_district())
                     {
                         case "work":
                             work_cells.Add(city[y, x]);

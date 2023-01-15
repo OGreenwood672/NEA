@@ -16,23 +16,20 @@ public class CityGenerationsUtilities
         int[,] right = new int[arr.GetLength(0) - mid_index, arr.GetLength(1)]; //Initially did .Length
         for (int i=0; i<arr.GetLength(0); i++)
         {
-
             if (i < mid_index)
             {
                 for (int j=0; j<arr.GetLength(1); j++)
                 {
                     left[i, j] = arr[i, j];
                 }
-
-            } else {
-
+            }
+            else
+            {
                 for (int j=0; j<arr.GetLength(1); j++)
                 {
                     right[i - mid_index, j] = arr[i, j];  // Used % instead of -
                 }
-
             }
-
         }
 
         
@@ -54,7 +51,9 @@ public class CityGenerationsUtilities
                 }
                 left_index++;
 
-            } else {
+            }
+            else
+            {
 
                 for (int j=0; j<arr.GetLength(1); j++)
                 {
