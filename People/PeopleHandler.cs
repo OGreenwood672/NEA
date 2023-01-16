@@ -33,6 +33,8 @@ public class PeopleHandler : MonoBehaviour
 
     private int width;
     private int height;
+    
+    private int population_size;
 
     private int seed;
 
@@ -96,7 +98,7 @@ public class PeopleHandler : MonoBehaviour
 
         rnd = new System.Random(seed);
 
-        for (int i=0; i<world_manager.population_size; i++)
+        for (int i=0; i<population_size; i++)
         {
 
             Person person = create_person();
