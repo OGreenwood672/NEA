@@ -181,8 +181,8 @@ public class PeopleHandler : MonoBehaviour
     {
 
         int no_of_activities = work_cells.Count
-                             + school_cells.Count
-                             + social_cells.Count;
+                                + school_cells.Count
+                                + social_cells.Count;
 
         CityCell activity;
         int activity_index = rnd.Next(no_of_activities);
