@@ -97,6 +97,7 @@ public class CityHandler : MonoBehaviour
                                                         1.0f)
                                                     );
 
+
                 SpriteRenderer renderer = cell.AddComponent<SpriteRenderer>();
                 
                 if (city[y, x].road) {

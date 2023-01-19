@@ -64,6 +64,8 @@ public class PeopleHandler : MonoBehaviour
         width = world_manager.width;
         height = world_manager.height;
 
+        population_size = world_manager.population_size;
+
         people = new List<Person>();
 
         immunity_range = world_manager.immunity_range;
@@ -165,7 +167,6 @@ public class PeopleHandler : MonoBehaviour
             render_person(person);
 
             person.is_dead = check_if_dead(person);
-            
             
         }
     }
@@ -451,6 +452,7 @@ public class PeopleHandler : MonoBehaviour
                                                 ((float)Screen.height / (float)height) * 0.1f + Screen.height/2,
                                                 1.0f)
                                             );
+
         }
         else
         {
