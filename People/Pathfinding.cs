@@ -36,10 +36,10 @@ public class Pathfinding
         start["f"] = heuristic(start, end);
 
         priority_open_set.Add(
-            start  //Talk about PeopleUtils, init used hashtables (no unique for coords)
+            start
         );
 
-        Hashtable current = priority_open_set[0];
+        Hashtable current;
 
         while (priority_open_set.Count > 0)
         {
@@ -50,7 +50,7 @@ public class Pathfinding
                 person.temp_path = new List<int[]>();
                 person.temp_path.Insert(0, new int[]{ (int)current["x"], (int)current["y"] });
                 save_path(person, current);
-                return true;;
+                return true;
             }
 
             priority_open_set.RemoveAt(0);
@@ -66,13 +66,9 @@ public class Pathfinding
                     neighbour["f"] = tentative_g + heuristic(neighbour, end);
                     priority_open_set = priotity_replace(priority_open_set, neighbour);
                 }
-
             }
-
         }
-
         return false;
-
     }
 
     static List<Hashtable> get_neighbours(List<Hashtable> road_map, Hashtable current)
@@ -85,9 +81,10 @@ public class Pathfinding
         Hashtable temp = new Hashtable();
         temp.Add("x", -1);
 
+        // Add some default hashtables to compare other hashtables with
         for (int i=0; i<4; i++)
         {
-            winning[i] = (Hashtable)temp.Clone();  //Might need cast as Clone return object
+            winning[i] = (Hashtable)temp.Clone();
         }
 
         foreach (Hashtable cell in road_map)
@@ -139,8 +136,6 @@ public class Pathfinding
             (bool)current["down"]
         };
 
-        // Debug.Log("current: x: " + current["x"] + ", y: " + current["y"]);
-
         for (int i=0; i<4; i++)
         {
             if (directions[i])
@@ -156,19 +151,15 @@ public class Pathfinding
     private static List<Hashtable> priotity_replace(List<Hashtable> priority_open_set, Hashtable neighbour)
     {
 
-        // Remove Current Instance of neighboour inside of open_set
+        // Remove Current Instance of neighbour inside of open_set
         for (int i=0; i<priority_open_set.Count; i++)
         {
-
             if (   (int)priority_open_set[i]["x"] == (int)neighbour["x"]
                 && (int)priority_open_set[i]["y"] == (int)neighbour["y"])
             {
-
                 priority_open_set.RemoveAt(i);
                 break;
-
             }
-
         }
 
         if (priority_open_set.Count == 0)
@@ -221,7 +212,7 @@ public class Pathfinding
     private static float heuristic(Hashtable start, Hashtable end)
     {
         return (
-              ((int)start["x"] - (int)end["x"]) * ((int)start["x"] - (int)end["x"])
+                ((int)start["x"] - (int)end["x"]) * ((int)start["x"] - (int)end["x"])
             + ((int)start["y"] - (int)end["y"]) * ((int)start["y"] - (int)end["y"])
         );
     }
@@ -262,7 +253,7 @@ public class Pathfinding
 
     // Make set of coords useful for navigation using A* algorithm
     // O(n^2)
-    public static List<Hashtable> make_road_map(List<CityCell> road_cells)  // IT IS USEFUL, ODD INDEXS; Lol not true
+    public static List<Hashtable> make_road_map(List<CityCell> road_cells)
     {
 
         List<Hashtable> map = new List<Hashtable>();
@@ -272,8 +263,8 @@ public class Pathfinding
 
             Hashtable road_location = Pathfinding.road_location(road);
 
-            // Loop thorugh all road twice vs
-            road_location = Pathfinding.add_neighbour_directions(
+            // Loop thorugh all road twice
+            road_location = add_neighbour_directions(
                 road_cells,
                 road_location
             );
@@ -292,7 +283,7 @@ public class Pathfinding
             }
 
             bool opposite_roads = (neighbour_directions[0] && neighbour_directions[1])
-                               || (neighbour_directions[2] && neighbour_directions[3]);
+                                || (neighbour_directions[2] && neighbour_directions[3]);
             if (!(neighbours == 2 && opposite_roads))
             {
 
@@ -301,11 +292,8 @@ public class Pathfinding
                 );
 
             }
-
         }
-
         return map;
-
     }
 
     public static List<Hashtable> copy_road_map(List<Hashtable> road_map)

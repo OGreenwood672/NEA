@@ -353,54 +353,42 @@ public class CityGeneration
     // Add the closest road to all the cells
     void add_closest_road()
     {
-
         int coord_change;
 
         for (int y=0; y<height; y++)
         {
             for (int x=0; x<width; x++)
             {
-
                 if (!city[y, x].road)
                 {
 
                     coord_change = 0;
-                    // If no road found, what then?
-                    while (true)//coord_change < Mathf.Min(width, height) / 2)
+                    while (true)
                     {
-
                         if (city[y, CityGenerationsUtilities.constrain(x+coord_change, 0, width-1)].road)
                         {
                             city[y, x].set_closest_road(city[y, x+coord_change]);
                             break;
                         }
-
                         if (city[y, CityGenerationsUtilities.constrain(x-coord_change, 0, width-1)].road)
                         {
                             city[y, x].set_closest_road(city[y, x-coord_change]);
                             break;
                         }
-
                         if (city[CityGenerationsUtilities.constrain(y+coord_change, 0, height-1), x].road)
                         {
                             city[y, x].set_closest_road(city[y+coord_change, x]);
                             break;
                         }
-
                         if (city[CityGenerationsUtilities.constrain(y-coord_change, 0, height-1), x].road)
                         {
                             city[y, x].set_closest_road(city[y-coord_change, x]);
                             break;
                         }
-
                         coord_change++;
-
                     }
-
                 }
             }
         }
-
     }
-
 }

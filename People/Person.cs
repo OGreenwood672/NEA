@@ -112,6 +112,30 @@ public class Person
         );
     }
 
+    public bool check_if_dead(System.Random rnd, float death_chance)
+    {
+        
+        if (this.infected_time == 0)
+        {
+            int probability = rnd.Next(101);
+            if ((float)( probability / 100f ) > death_chance)
+            {
+                this.is_dead = true;
+                return true;
+            }
+            else
+            {
+                this.infected = false;
+                this.infected_time = -1;
+            }
+        }
+        else if (this.infected_time > 0)
+        {
+            this.infected_time -= 1;
+        }
+        return false;
+
+    }
+
 }
 
-//CASTING ERRORS, DUE TO HASHTABLES ONLY HOLDING GENERIC OBJECT CLASS

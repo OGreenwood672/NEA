@@ -39,6 +39,9 @@ public class PeopleHandler : MonoBehaviour
     private int seed;
 
     private int immunity_range;
+    private float initial_infected_probabilty;
+    private int rate_of_infection_in_ticks;
+    private float death_chance;
 
     public GameObject parent;
 
@@ -69,6 +72,9 @@ public class PeopleHandler : MonoBehaviour
         people = new List<Person>();
 
         immunity_range = world_manager.immunity_range;
+        initial_infected_probabilty = world_manager.initial_infected_probabilty;
+        rate_of_infection_in_ticks = world_manager.rate_of_infection_in_ticks;
+        death_chance = world_manager.death_chance;
 
         speed = world_manager.speed;
 
@@ -110,7 +116,7 @@ public class PeopleHandler : MonoBehaviour
             );
         }
 
-        begin_breakout();
+        //begin_breakout();
         
     }
 
@@ -156,7 +162,7 @@ public class PeopleHandler : MonoBehaviour
 
             move_people(person);
 
-            if (person.infected && game_ticks % world_manager.rate_of_infection_in_ticks == 0)
+            if (person.infected && game_ticks % rate_of_infection_in_ticks == 0)
             {
                 VirusHandler.infect_people(world_manager, people, person);
             }
@@ -166,7 +172,7 @@ public class PeopleHandler : MonoBehaviour
 
             render_person(person);
 
-            person.is_dead = check_if_dead(person);
+            person.check_if_dead(rnd, death_chance);
             
         }
     }
@@ -244,7 +250,7 @@ public class PeopleHandler : MonoBehaviour
     void begin_breakout()
     {
         int no_of_infected = Mathf.CeilToInt(
-            world_manager.population_size * world_manager.initial_infected_probabilty
+            population_size * initial_infected_probabilty
         );
         for (int i=0; i<no_of_infected; i++)
         {
@@ -252,29 +258,6 @@ public class PeopleHandler : MonoBehaviour
         }
     }
 
-    bool check_if_dead(Person person)
-    {
-        
-        if (person.infected_time == 0)
-        {
-            int probability = rnd.Next(101);
-            if (probability > world_manager.death_chance)
-            {
-                return true;
-            }
-            else
-            {
-                person.infected = false;
-                person.infected_time = -1;
-            }
-        }
-        else if (person.infected_time > 0)
-        {
-            person.infected_time -= 1;
-        }
-        return false;
-
-    }
 
     void execute_lockdown(Person person)
     {
@@ -359,10 +342,7 @@ public class PeopleHandler : MonoBehaviour
             person.y = person.house.y;
         }
 
-        CityCell current_cell = city_handler.get_cell_by_coords(Mathf.FloorToInt(person.x), Mathf.FloorToInt(person.y));
-        if (
-            (end_work_time_check || end_school_time_check || end_social_time_check) 
-            && !(current_cell.x == person.house.x && current_cell.y == person.house.y))
+        if ((end_work_time_check || end_school_time_check || end_social_time_check))
         {
             find_path(
                 person,
@@ -395,12 +375,11 @@ public class PeopleHandler : MonoBehaviour
             end_hashtable,
             Pathfinding.copy_road_map(road_map)
         );
-
+        
         if (found)
         {
             person.append_cell_to_path(end);
         }
-
     }
 
     void move_people(Person person)
@@ -439,7 +418,7 @@ public class PeopleHandler : MonoBehaviour
         if (person.has_path())
         {
             person.renderer.enabled = true;
-            person.game_object.transform.position = Camera.main.GetComponent<Camera>().ScreenToWorldPoint(  // Struggled with coords
+            person.game_object.transform.position = Camera.main.GetComponent<Camera>().ScreenToWorldPoint(
                                                 new Vector3(
                                                     (float)Screen.width * (person.x + 0.5f + person.x_off) / width,
                                                     (float)Screen.height - (float)Screen.height * (person.y + 0.5f + person.y_off) / height,
@@ -492,7 +471,7 @@ public class PeopleHandler : MonoBehaviour
 
     public int get_population_count()
     {
-        return world_manager.population_size;
+        return population_size;
     }
 
 }
