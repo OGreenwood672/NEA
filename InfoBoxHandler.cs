@@ -23,12 +23,6 @@ public class InfoBoxHandler : MonoBehaviour
         return hours + ":" + mins;
     }
 
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void FixedUpdate()
     {
 
@@ -38,12 +32,11 @@ public class InfoBoxHandler : MonoBehaviour
         int game_ticks = people_handler.get_game_ticks();
 
         info_text.text = (
-                            "Game Ticks: " + game_ticks
-                          + "\nTime: " + calculate_time(game_ticks)
-                          + "\nPopulation: " + population
-                          + "\nInfected: " + infected_count
-                          + "\nDead: " + death_count
+                            "\nTime: " + calculate_time(game_ticks)
+                            + "\nPopulation: " + population
+                            + "\nInfected: " + infected_count
+                            + "\nDead: " + death_count
                         );
-        
+
     }
 }
