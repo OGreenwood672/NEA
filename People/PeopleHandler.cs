@@ -116,12 +116,17 @@ public class PeopleHandler : MonoBehaviour
             );
         }
 
-        //begin_breakout();
+        begin_breakout();
         
     }
 
     void OnDisable()
     {
+        foreach (Transform child in people[0].game_object.transform.parent)
+        {
+            Destroy(child.gameObject);
+        }
+
         foreach (Person person in people)
         {
             person.renderer.enabled = false;
