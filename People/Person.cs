@@ -118,7 +118,7 @@ public class Person
         if (this.infected_time == 0)
         {
             int probability = rnd.Next(101);
-            if ((float)( probability / 100f ) > death_chance)
+            if ((float)( probability / 100f ) < death_chance)
             {
                 this.is_dead = true;
                 return true;
